@@ -32,6 +32,10 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="SDL_utils.cpp" />
+		<Unit filename="SDL_utils.h" />
+		<Unit filename="init_game.cpp" />
+		<Unit filename="init_game.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

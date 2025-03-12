@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1741764393 source:d:\battlecity\sdl_utils.cpp
+	"SDL_utils.h"
+
+1741764458 d:\battlecity\sdl_utils.h
+	<SDL.h>
+	<SDL_image.h>
+
+1741764393 source:d:\battlecity\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	<vector>
+	"SDL_utils.h"
+	"init_game.h"
+
+1741764623 source:d:\battlecity\init_game.cpp
+	<SDL.h>
+	<SDL_image.h>
+	"init_game.h"
+
+1741764803 d:\battlecity\init_game.h
+	<SDL.h>
+	<SDL_image.h>
+	"SDL_utils.h"
+
