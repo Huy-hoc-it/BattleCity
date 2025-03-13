@@ -1,7 +1,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "SDL_utils.h"
-
+#include "drawmap.h"
 using namespace std;
 
 enum Direction { LEFT, RIGHT, UP, DOWN };
@@ -28,6 +28,7 @@ struct Box{
     int y;
     int sizea = 40;
     double dir_img = 90;
+    Tilemap tilemap;
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     Direction lastDir = RIGHT;
     SDL_Texture* texture = nullptr;

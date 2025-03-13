@@ -1,7 +1,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "init_game.h"
-
+#include "drawmap.h"
 using namespace std;
 const int BULLET_SPEED = 8;
 
@@ -41,9 +41,10 @@ bool Bullet::isInside(int minX, int minY, int maxX, int maxY)
 
 void Box::render(SDL_Renderer* renderer, SDL_Texture* texture)
 {
+    tilemap.loadFromFile("map_1.txt");
+    tilemap.render_map(renderer, texture);
     texture = loadTexture("tank_main.png", renderer);
     renderTexture(texture, x, y, sizea, sizea, dir_img, flip, renderer);
-
 }
 
 void Box::move_left()
