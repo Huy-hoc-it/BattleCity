@@ -26,7 +26,7 @@ struct Bullet{
 struct Box{
     int x;
     int y;
-    int sizea = 40;
+    int sizea = 30;
     double dir_img = 90;
     Tilemap tilemap;
     SDL_RendererFlip flip = SDL_FLIP_NONE;
@@ -34,7 +34,7 @@ struct Box{
     SDL_Texture* texture = nullptr;
     SDL_Renderer* renderer;
 
-    void render(SDL_Renderer* renderer, SDL_Texture* texture);
+    void render(SDL_Renderer* renderer);
 
     void move_left();
     void move_right();

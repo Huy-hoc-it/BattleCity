@@ -18,13 +18,13 @@ void initSDL(SDL_Window* &window, SDL_Renderer* &renderer, const int SCREEN_WIDT
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void renderTexture(SDL_Texture *texture, int x, int y, int witch, int height, double direc, SDL_RendererFlip flip, SDL_Renderer* renderer)
+void renderTexture(SDL_Texture *texture, int x, int y, int width, int height, double direc, SDL_RendererFlip flip, SDL_Renderer* renderer)
 {
 	SDL_Rect dest;
 
 	dest.x = x;
 	dest.y = y;
-	dest.w = witch;
+	dest.w = width;
 	dest.h = height;
 	//SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
 

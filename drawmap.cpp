@@ -12,29 +12,30 @@ using namespace std;
 void Tilemap::loadFromFile(const string& filename)
 {
     ifstream file(filename);
-    if (!file)
+    if (!file.is_open())
     {
         cout << "file can't open: " << filename << endl;
         return;
     }
-
-    tiles.clear();
-    string line;
-    while (getline(file, line))
-    {
-        vector<int> row;
-        for(int i = 0; i < int(line.size()); i++)
+    else{
+        tiles.clear();
+        string line;
+        while (getline(file, line))
         {
-            if(line[i] != ',' && line[i] != ' ')
+            vector<int> row;
+            for(int i = 0; i < int(line.size()); i++)
             {
-                row.push_back(int(line[i] - '0'));
+                if(line[i] != ',' && line[i] != ' ')
+                {
+                    row.push_back(int(line[i] - '0'));
+                }
             }
+            tiles.push_back(row);
+            width_map = max(width_map, (int)row.size());
         }
-        tiles.push_back(row);
-        width_map = max(width_map, (int)row.size());
+        height_map = tiles.size();
+        file.close();
     }
-    height_map = tiles.size();
-    file.close();
 }
 
 void Tilemap::render_map(SDL_Renderer* renderer, SDL_Texture* texture)
@@ -45,12 +46,7 @@ void Tilemap::render_map(SDL_Renderer* renderer, SDL_Texture* texture)
         {
             if(tiles[i][j] != 0)
             {
-                SDL_Rect rect_map = {i*tileSize, j*tileSize, tileSize, tileSize};
-                string tile;
-                tile = to_string(tiles[i][j]);
-                tile += ".png";
-                texture = loadTexture(tile.c_str(), renderer);
-                SDL_RenderCopy(renderer, texture, NULL, &rect_map);
+                renderTexture(texture, i*tileSize, j*tileSize, tileSize, tileSize, 0, SDL_FLIP_NONE, renderer);
             }
         }
     }

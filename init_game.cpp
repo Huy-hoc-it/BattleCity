@@ -39,12 +39,13 @@ bool Bullet::isInside(int minX, int minY, int maxX, int maxY)
 }
 
 
-void Box::render(SDL_Renderer* renderer, SDL_Texture* texture)
+void Box::render(SDL_Renderer* renderer)
 {
     tilemap.loadFromFile("map_1.txt");
-    tilemap.render_map(renderer, texture);
-    texture = loadTexture("tank_main.png", renderer);
-    renderTexture(texture, x, y, sizea, sizea, dir_img, flip, renderer);
+    SDL_Texture* tiletexture = loadTexture("1.png", renderer);
+    tilemap.render_map(renderer, tiletexture);
+    SDL_Texture* tanktexture = loadTexture("tank_main.png", renderer);
+    renderTexture(tanktexture, x, y, sizea, sizea, dir_img, flip, renderer);
 }
 
 void Box::move_left()

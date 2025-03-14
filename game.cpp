@@ -10,16 +10,17 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
 {
     SDL_Event e;
     Box box;
-    box.x = 10;
-    box.y = 10;
+    box.x = 0;
+    box.y = 0;
 
     vector <Bullet> bullets;
 
     bool running = true;
-
+    //Tilemap tilemap;
+    //tilemap.loadFromFile("map_1.txt");
     while(running)
     {
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
         while(SDL_PollEvent(&e))
@@ -65,7 +66,7 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
             }
         }
 
-        box.render(renderer, texture);
+        box.render(renderer);
         SDL_RenderPresent(renderer);
         SDL_Delay(16);
     }
