@@ -46,7 +46,7 @@ void Tilemap::render_map(SDL_Renderer* renderer, SDL_Texture* texture)
         {
             if(tiles[i][j] != 0)
             {
-                renderTexture(texture, i*tileSize, j*tileSize, tileSize, tileSize, 0, SDL_FLIP_NONE, renderer);
+                renderTexture(texture, j*tileSize, i*tileSize, tileSize, tileSize, 0, SDL_FLIP_NONE, renderer);
             }
         }
     }

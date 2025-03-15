@@ -48,32 +48,62 @@ void Box::render(SDL_Renderer* renderer)
     renderTexture(tanktexture, x, y, sizea, sizea, dir_img, flip, renderer);
 }
 
-void Box::move_left()
+bool Box::checkCollision(vector <vector<int>> & tiles, int tileSize)
 {
-    x -= 5;
+    int tileX_upon = x / tileSize;
+    int tileY_upon = y / tileSize;
+    int tileX_bottom = (x + sizea - 1) / tileSize;
+    int tileY_bottom = (y + sizea - 1) / tileSize;
+    if (tileX_upon < 0 || tileY_upon < 0 || tileX_bottom >= tiles.size() || tileY_bottom >= tiles.size()) return false;
+    if(tiles[tileY_upon][tileX_upon] > 0 || tiles[tileY_bottom][tileX_bottom] > 0 ||
+       tiles[tileY_upon][tileX_bottom] > 0 || tiles[tileY_bottom][tileX_upon] > 0){
+        return true; // đụng tường
+    }
+    return false;
+}
+
+void Box::move_left(const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+{
+    if(x - 5 >= 0)x -= 5;
     lastDir = LEFT;
     dir_img = 270;
+    if(checkCollision(tilemap.tiles, tilemap.tileSize)){
+        x += 5;
+        return;
+    }
 }
 
-void Box::move_right()
+void Box::move_right(const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
-    x += 5;
+    if(x + sizea + 5 <= SCREEN_WIDTH)x += 5;
     lastDir = RIGHT;
     dir_img = 90;
+    if(checkCollision(tilemap.tiles, tilemap.tileSize)){
+        x -= 5;
+        return;
+    }
 }
 
-void Box::move_up()
+void Box::move_up(const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
-    y -= 5;
+    if(y - 5 >= 0)y -= 5;
     lastDir = UP;
     dir_img = 0;
+    if(checkCollision(tilemap.tiles, tilemap.tileSize)){
+        y += 5;
+        return;
+    }
 }
 
-void Box::move_down()
+void Box::move_down(const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
-    y += 5;
+    if(y + sizea + 5 <= SCREEN_HEIGHT)y += 5;
     lastDir = DOWN;
     dir_img = 180;
+    if(checkCollision(tilemap.tiles, tilemap.tileSize)){
+        y -= 5;
+        return;
+    }
 }
 
 bool Box::inside(int minX, int minY, int maxX, int maxY)

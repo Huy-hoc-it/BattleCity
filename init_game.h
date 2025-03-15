@@ -1,3 +1,6 @@
+#ifndef INITGAME_H
+#define INITGAME_H
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include "SDL_utils.h"
@@ -36,10 +39,13 @@ struct Box{
 
     void render(SDL_Renderer* renderer);
 
-    void move_left();
-    void move_right();
-    void move_up();
-    void move_down();
+    void move_left(const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
+    void move_right(const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
+    void move_up(const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
+    void move_down(const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 
+    bool checkCollision(vector <vector<int>> & tiles, int tileSize);
     bool inside(int minX, int minY, int maxX, int maxY);
 };
+
+#endif // INITGAME_H

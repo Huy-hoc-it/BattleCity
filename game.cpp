@@ -16,8 +16,6 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
     vector <Bullet> bullets;
 
     bool running = true;
-    //Tilemap tilemap;
-    //tilemap.loadFromFile("map_1.txt");
     while(running)
     {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -34,16 +32,16 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
                     running = false;
                     break;
                 case SDLK_LEFT:
-                    box.move_left();
+                    box.move_left(SCREEN_WIDTH, SCREEN_HEIGHT);
                     break;
                 case SDLK_RIGHT:
-                    box.move_right();
+                    box.move_right(SCREEN_WIDTH, SCREEN_HEIGHT);
                     break;
                 case SDLK_UP:
-                    box.move_up();
+                    box.move_up(SCREEN_WIDTH, SCREEN_HEIGHT);
                     break;
                 case SDLK_DOWN:
-                    box.move_down();
+                    box.move_down(SCREEN_WIDTH, SCREEN_HEIGHT);
                     break;
                 case SDLK_SPACE:
                     bullets.push_back(Bullet(box.x + box.sizea / 2 - 10 / 2, box.y + box.sizea / 2 - 10 / 2, box.lastDir));

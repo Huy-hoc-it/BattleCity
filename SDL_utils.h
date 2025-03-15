@@ -1,3 +1,6 @@
+#ifndef UTILS_H
+#define UTILS_H
+
 #include <SDL.h>
 #include <SDL_image.h>
 
@@ -14,3 +17,5 @@ void logErrorAndExit(const char* msg, const char* error);
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* texture);
 
 void waitUntilKeyPressed();
+
+#endif // UTILS_H
