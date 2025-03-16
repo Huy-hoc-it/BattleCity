@@ -9,6 +9,14 @@
 
 using namespace std;
 
+void Tilemap::loadTileTextures(SDL_Renderer* renderer)
+{
+    for(int i = 1; i <= numTile; i++){
+        string fileName = to_string(i) + ".png";
+        tileTextures[i] = loadTexture(fileName.c_str(), renderer);
+    }
+}
+
 void Tilemap::loadFromFile(const string& filename)
 {
     ifstream file(filename);
@@ -38,15 +46,16 @@ void Tilemap::loadFromFile(const string& filename)
     }
 }
 
-void Tilemap::render_map(SDL_Renderer* renderer, SDL_Texture* texture)
+void Tilemap::render_map(SDL_Renderer* renderer)
 {
     for(int i = 0; i < height_map; i++)
     {
         for(int j = 0; j < width_map; j++)
         {
-            if(tiles[i][j] != 0)
+            int tileID = tiles[i][j];
+            if(tileID != 0 && tileTextures.count(tileID))
             {
-                renderTexture(texture, j*tileSize, i*tileSize, tileSize, tileSize, 0, SDL_FLIP_NONE, renderer);
+                renderTexture(tileTextures[tileID], i*tileSize, j*tileSize, tileSize, tileSize, 0, SDL_FLIP_NONE, renderer);
             }
         }
     }

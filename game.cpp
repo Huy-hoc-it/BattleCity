@@ -3,6 +3,7 @@
 #include <SDL_image.h>
 #include <vector>
 #include "init_game.h"
+#include "drawmap.h"
 
 using namespace std;
 
@@ -14,7 +15,8 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
     box.y = 0;
 
     vector <Bullet> bullets;
-
+    Tilemap tilemap;
+    tilemap.loadFromFile("map_1.txt");
     bool running = true;
     while(running)
     {
@@ -32,16 +34,16 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
                     running = false;
                     break;
                 case SDLK_LEFT:
-                    box.move_left(SCREEN_WIDTH, SCREEN_HEIGHT);
+                    box.move_left(tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
                     break;
                 case SDLK_RIGHT:
-                    box.move_right(SCREEN_WIDTH, SCREEN_HEIGHT);
+                    box.move_right(tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
                     break;
                 case SDLK_UP:
-                    box.move_up(SCREEN_WIDTH, SCREEN_HEIGHT);
+                    box.move_up(tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
                     break;
                 case SDLK_DOWN:
-                    box.move_down(SCREEN_WIDTH, SCREEN_HEIGHT);
+                    box.move_down(tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
                     break;
                 case SDLK_SPACE:
                     bullets.push_back(Bullet(box.x + box.sizea / 2 - 10 / 2, box.y + box.sizea / 2 - 10 / 2, box.lastDir));
@@ -50,21 +52,21 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
                 }
             }
         }
-        for (size_t i = 0; i < bullets.size(); )
+        for (size_t i = 0; i < bullets.size(); ) // size_t: kieu du lieu unsigned, khong am
         {
             bullets[i].move();
-            if (bullets[i].isInside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT))
+            if (!bullets[i].isInside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) || bullets[i].collision_bullet_wall(tilemap.tiles, tilemap.tileSize))
+            {
+                bullets.erase(bullets.begin() + i); // Xóa viên đạn nếu ra ngoài màn hình hoặc chạm vào tường gạch
+            }
+            else
             {
                 bullets[i].render(renderer);
                 ++i;
             }
-            else
-            {
-                bullets.erase(bullets.begin() + i); // Xóa viên đạn nếu ra ngoài màn hình
-            }
         }
 
-        box.render(renderer);
+        box.render(renderer, tilemap);
         SDL_RenderPresent(renderer);
         SDL_Delay(16);
     }

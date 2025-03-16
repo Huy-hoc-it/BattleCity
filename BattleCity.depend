@@ -13,24 +13,26 @@
 	"SDL_utils.h"
 	"game.h"
 
-1742052534 source:d:\battlecity\init_game.cpp
+1742142299 source:d:\battlecity\init_game.cpp
 	<SDL.h>
 	<SDL_image.h>
 	"init_game.h"
 	"drawmap.h"
+	<iostream>
 
-1742052953 d:\battlecity\init_game.h
+1742142656 d:\battlecity\init_game.h
 	<SDL.h>
 	<SDL_image.h>
 	"SDL_utils.h"
 	"drawmap.h"
 
-1742052471 source:d:\battlecity\game.cpp
+1742142656 source:d:\battlecity\game.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
 	<vector>
 	"init_game.h"
+	"drawmap.h"
 
 1742032345 d:\battlecity\game.h
 	<iostream>
@@ -38,15 +40,16 @@
 	<SDL_image.h>
 	"init_game.h"
 
-1741885010 d:\battlecity\drawmap.h
+1742138606 d:\battlecity\drawmap.h
 	<SDL.h>
 	<SDL_image.h>
 	"SDL_utils.h"
 	<vector>
 	<string>
 	<fstream>
+	<map>
 
-1742050925 source:d:\battlecity\drawmap.cpp
+1742138217 source:d:\battlecity\drawmap.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
