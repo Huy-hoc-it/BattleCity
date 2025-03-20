@@ -200,4 +200,96 @@ void Enemy::enemy_shoot(vector <Bullet> &bullets_enemy)
     bullets_enemy.push_back(Bullet(x + size_enemy / 2 - 10 / 2, y + size_enemy / 2 - 10 / 2, lastDir));
 }
 
+void Enemy::move_direc(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+{
+    Direction direc = (Direction)(rand() % 4);
+    if(direc == LEFT)
+    {
+        int dx_old = dx;
+        int dy_old = dy;
+        dx = -speed;
+        dy = 0;
+        x += dx;
+        y += dy;
+        if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
+            x -= dx;
+            y -= dy;
+            dx = dx_old;
+            dy = dy_old;
+            return;
+        }
+        else{
+            x -= dx;
+            y -= dy;
+        }
+        lastDir = LEFT;
+        dir_img = 270;
+    }
+    else if(direc == RIGHT)
+    {
+        int dx_old = dx;
+        int dy_old = dy;
+        dx = speed;
+        dy = 0;
+        x += dx;
+        y += dy;
+        if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
+            x -= dx;
+            y -= dy;
+            dx = dx_old;
+            dy = dy_old;
+            return;
+        }
+        else{
+            x -= dx;
+            y -= dy;
+        }
+        lastDir = RIGHT;
+        dir_img = 90;
+    }
+    else if(direc == UP)
+    {
+        int dx_old = dx;
+        int dy_old = dy;
+        dx = 0;
+        dy = -speed;
+        x += dx;
+        y += dy;
+        if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
+            x -= dx;
+            y -= dy;
+            dx = dx_old;
+            dy = dy_old;
+            return;
+        }
+        else{
+            x -= dx;
+            y -= dy;
+        }
+        lastDir = UP;
+        dir_img = 0;
+    }
+    else
+    {
+        int dx_old = dx;
+        int dy_old = dy;
+        dx = 0;
+        dy = speed;
+        x += dx;
+        y += dy;
+        if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
+            x -= dx;
+            y -= dy;
+            dx = dx_old;
+            dy = dy_old;
+            return;
+        }
+        else{
+            x -= dx;
+            y -= dy;
+        }
+        lastDir = DOWN;
+        dir_img = 180;
+    }
+}
 

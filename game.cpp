@@ -23,11 +23,13 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
     Enemy enemy(SCREEN_WIDTH - 30, 0);
 
     int shoot_timer = 0;
+    int enemy_direc_timer = 0;
     while(running)
     {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         shoot_timer++;
+        enemy_direc_timer++;
 
         while(SDL_PollEvent(&e))
         {
@@ -77,6 +79,10 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
         if(shoot_timer > 60){
             enemy.enemy_shoot(bullets_enemy);
             shoot_timer = 0;
+        }
+        if(enemy_direc_timer > 180){
+            enemy.move_direc(tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
+            enemy_direc_timer = 0;
         }
 
         for (size_t i = 0; i < bullets_enemy.size(); ) // size_t: kieu du lieu unsigned, khong am

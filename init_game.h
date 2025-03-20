@@ -71,6 +71,7 @@ struct Enemy{
     void move_enemy(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
     void render_enemy(SDL_Renderer* renderer);
     void enemy_shoot(vector <Bullet> &bullets_enemy);
+    void move_direc(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 
     bool Collision_Enemy_Wall(Tilemap& tilemap);
     bool inside(int minX, int minY, int maxX, int maxY);
