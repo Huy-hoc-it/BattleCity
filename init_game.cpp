@@ -195,4 +195,9 @@ void Enemy::render_enemy(SDL_Renderer* renderer)
     renderTexture(tanktexture, x, y, size_enemy, size_enemy, dir_img, flip, renderer);
 }
 
+void Enemy::enemy_shoot(vector <Bullet> &bullets_enemy)
+{
+    bullets_enemy.push_back(Bullet(x + size_enemy / 2 - 10 / 2, y + size_enemy / 2 - 10 / 2, lastDir));
+}
+
 

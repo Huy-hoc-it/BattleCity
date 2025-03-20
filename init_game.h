@@ -58,7 +58,7 @@ struct Enemy{
     double dir_img = 270;
     Tilemap tilemap;
     SDL_RendererFlip flip = SDL_FLIP_NONE;
-    Direction lastDir = RIGHT;
+    Direction lastDir = LEFT;
 
     Enemy(int startX, int startY) {
         x = startX;
@@ -70,6 +70,7 @@ struct Enemy{
 
     void move_enemy(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
     void render_enemy(SDL_Renderer* renderer);
+    void enemy_shoot(vector <Bullet> &bullets_enemy);
 
     bool Collision_Enemy_Wall(Tilemap& tilemap);
     bool inside(int minX, int minY, int maxX, int maxY);
