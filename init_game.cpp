@@ -3,6 +3,8 @@
 #include "init_game.h"
 #include "drawmap.h"
 #include <iostream>
+#include <algorithm>
+
 using namespace std;
 const int BULLET_SPEED = 8;
 
@@ -73,7 +75,7 @@ bool Box::checkCollision(Tilemap& tilemap)
     int tileY_upon = y / tilemap.tileSize;
     int tileX_bottom = (x + sizea - 1) / tilemap.tileSize;
     int tileY_bottom = (y + sizea - 1) / tilemap.tileSize;
-    cout << tileX_upon << " " << tileY_upon << " " << tileX_bottom << " " << tileY_bottom << endl;
+    //cout << tileX_upon << " " << tileY_upon << " " << tileX_bottom << " " << tileY_bottom << endl;
     if (tileX_upon < 0 || tileY_upon < 0 || tileX_bottom >= tilemap.tiles.size() || tileY_bottom >= tilemap.tiles.size()) return false;
     if(tilemap.tiles[tileX_upon][tileY_upon] > 0 || tilemap.tiles[tileX_bottom][tileY_bottom] > 0 ||
        tilemap.tiles[tileX_upon][tileY_bottom] > 0 || tilemap.tiles[tileX_bottom][tileY_upon] > 0){
@@ -129,6 +131,68 @@ void Box::move_down(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_H
 bool Box::inside(int minX, int minY, int maxX, int maxY)
 {
     return (minX <= x && minY <= y && x + sizea <= maxX && y + sizea <= maxY);
+}
+
+bool Enemy::Collision_Enemy_Wall(Tilemap& tilemap){
+    int tileX_upon = x / tilemap.tileSize;
+    int tileY_upon = y / tilemap.tileSize;
+    int tileX_bottom = (x + size_enemy - 1) / tilemap.tileSize;
+    int tileY_bottom = (y + size_enemy - 1) / tilemap.tileSize;
+    cout << tileX_upon << " " << tileY_upon << " " << tileX_bottom << " " << tileY_bottom << endl;
+    if (tileX_upon < 0 || tileY_upon < 0 || tileX_bottom >= tilemap.tiles.size() || tileY_bottom >= tilemap.tiles.size()) return false;
+    if(tilemap.tiles[tileX_upon][tileY_upon] > 0 || tilemap.tiles[tileX_bottom][tileY_bottom] > 0 ||
+       tilemap.tiles[tileX_upon][tileY_bottom] > 0 || tilemap.tiles[tileX_bottom][tileY_upon] > 0){
+        return true; // đụng tường
+    }
+    return false;
+}
+
+bool Enemy::inside(int minX, int minY, int maxX, int maxY)
+{
+    return (minX <= x && minY <= y && x + size_enemy <= maxX && y + size_enemy <= maxY);
+}
+
+void Enemy::move_enemy(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+{
+    x = x + dx;
+    y = y + dy;
+
+    if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
+        x -= dx;
+        y -= dy;
+
+        Direction direc = (Direction)(rand() % 4);
+        if(direc == LEFT){
+            dx = -speed;
+            dy = 0;
+            lastDir = LEFT;
+            dir_img = 270;
+        }
+        else if(direc == RIGHT){
+            dx = speed;
+            dy = 0;
+            lastDir = RIGHT;
+            dir_img = 90;
+        }
+        else if(direc == UP){
+            dx = 0;
+            dy = -speed;
+            lastDir = UP;
+            dir_img = 0;
+        }
+        else{
+            dx = 0;
+            dy = speed;
+            lastDir = DOWN;
+            dir_img = 180;
+        }
+    }
+}
+
+void Enemy::render_enemy(SDL_Renderer* renderer)
+{
+    SDL_Texture* tanktexture = loadTexture("enemy_tank.png", renderer);
+    renderTexture(tanktexture, x, y, size_enemy, size_enemy, dir_img, flip, renderer);
 }
 
 

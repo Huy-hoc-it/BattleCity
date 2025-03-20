@@ -50,4 +50,29 @@ struct Box{
     bool inside(int minX, int minY, int maxX, int maxY);
 };
 
+struct Enemy{
+    int x, y;
+    int dx, dy;
+    int speed;
+    int size_enemy = 30;
+    double dir_img = 270;
+    Tilemap tilemap;
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
+    Direction lastDir = RIGHT;
+
+    Enemy(int startX, int startY) {
+        x = startX;
+        y = startY;
+        speed = 2;
+        dx = -speed;
+        dy = 0;
+    }
+
+    void move_enemy(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
+    void render_enemy(SDL_Renderer* renderer);
+
+    bool Collision_Enemy_Wall(Tilemap& tilemap);
+    bool inside(int minX, int minY, int maxX, int maxY);
+};
+
 #endif // INITGAME_H

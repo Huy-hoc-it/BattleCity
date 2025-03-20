@@ -18,6 +18,8 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
     Tilemap tilemap;
     tilemap.loadFromFile("map_1.txt");
     bool running = true;
+
+    Enemy enemy(SCREEN_WIDTH - 30, 0);
     while(running)
     {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -65,8 +67,9 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
                 ++i;
             }
         }
-
+        enemy.move_enemy(tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
         box.render(renderer, tilemap);
+        enemy.render_enemy(renderer);
         SDL_RenderPresent(renderer);
         SDL_Delay(16);
     }

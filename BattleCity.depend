@@ -13,20 +13,21 @@
 	"SDL_utils.h"
 	"game.h"
 
-1742142299 source:d:\battlecity\init_game.cpp
+1742481297 source:d:\battlecity\init_game.cpp
 	<SDL.h>
 	<SDL_image.h>
 	"init_game.h"
 	"drawmap.h"
 	<iostream>
+	<algorithm>
 
-1742142656 d:\battlecity\init_game.h
+1742482193 d:\battlecity\init_game.h
 	<SDL.h>
 	<SDL_image.h>
 	"SDL_utils.h"
 	"drawmap.h"
 
-1742142656 source:d:\battlecity\game.cpp
+1742482193 source:d:\battlecity\game.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
