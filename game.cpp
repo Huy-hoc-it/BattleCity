@@ -69,6 +69,10 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
             }
             else
             {
+                if(bullets_main[i].collision_bullet_tank_enemy(enemy)){
+                    enemy.alive = false;
+                    bullets_main.erase(bullets_main.begin() + i);
+                }
                 bullets_main[i].render(renderer);
                 ++i;
             }
@@ -94,12 +98,17 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
             }
             else
             {
+                if(bullets_enemy[i].collision_bullet_tank_main(box)){
+                    box.alive = false;
+                    bullets_enemy.erase(bullets_enemy.begin() + i);
+                }
                 bullets_enemy[i].render(renderer);
                 ++i;
             }
         }
-
-        box.render(renderer, tilemap);
+        tilemap.loadTileTextures(renderer);
+        tilemap.render_map(renderer);
+        box.render(renderer);
         enemy.render_enemy(renderer);
         SDL_RenderPresent(renderer);
         SDL_Delay(16);

@@ -9,6 +9,9 @@ using namespace std;
 
 enum Direction { LEFT, RIGHT, UP, DOWN };
 
+struct Box;
+struct Enemy;
+
 struct Bullet{
     int x, y;
     int size_b = 10;
@@ -26,6 +29,9 @@ struct Bullet{
     bool isInside(int minX, int minY, int maxX, int maxY);
 
     bool collision_bullet_wall(vector < vector <int> >& tiles, int tileSize);
+
+    bool collision_bullet_tank_enemy(Enemy& enemy);
+    bool collision_bullet_tank_main(Box& box);
 };
 
 struct Box{
@@ -38,8 +44,9 @@ struct Box{
     Direction lastDir = RIGHT;
     SDL_Texture* texture = nullptr;
     SDL_Renderer* renderer;
+    bool alive = true;
 
-    void render(SDL_Renderer* renderer, Tilemap& tilemap);
+    void render(SDL_Renderer* renderer);
 
     void move_left(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
     void move_right(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
@@ -59,6 +66,7 @@ struct Enemy{
     Tilemap tilemap;
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     Direction lastDir = LEFT;
+    bool alive = true;
 
     Enemy(int startX, int startY) {
         x = startX;

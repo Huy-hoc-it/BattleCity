@@ -61,12 +61,39 @@ bool Bullet::collision_bullet_wall(vector < vector <int> >& tiles, int tileSize)
     return false;
 }
 
-void Box::render(SDL_Renderer* renderer,Tilemap& tilemap)
+bool Bullet::collision_bullet_tank_enemy(Enemy& enemy)
 {
-    tilemap.loadTileTextures(renderer);
-    tilemap.render_map(renderer);
-    SDL_Texture* tanktexture = loadTexture("tank_main.png", renderer);
-    renderTexture(tanktexture, x, y, sizea, sizea, dir_img, flip, renderer);
+    SDL_Rect bulletRect = {x, y, size_b, size_b};
+    SDL_Rect enemyRect = {enemy.x, enemy.y, enemy.size_enemy, enemy.size_enemy};
+
+    if(SDL_HasIntersection(&bulletRect, &enemyRect) && enemy.alive == true){
+        return true;
+    }
+
+    return false;
+}
+
+bool Bullet::collision_bullet_tank_main(Box& box)
+{
+    SDL_Rect bulletRect = {x, y, size_b, size_b};
+    SDL_Rect boxRect = {box.x, box.y, box.sizea, box.sizea};
+
+    if(SDL_HasIntersection(&bulletRect, &boxRect) && box.alive == true){
+        return true;
+    }
+
+    return false;
+}
+
+void Box::render(SDL_Renderer* renderer)
+{
+    if(alive){
+        SDL_Texture* tanktexture = loadTexture("tank_main.png", renderer);
+        renderTexture(tanktexture, x, y, sizea, sizea, dir_img, flip, renderer);
+    }
+    else{
+        return;
+    }
 }
 
 bool Box::checkCollision(Tilemap& tilemap)
@@ -86,44 +113,64 @@ bool Box::checkCollision(Tilemap& tilemap)
 
 void Box::move_left(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
-    if(x - 5 >= 0)x -= 5;
-    lastDir = LEFT;
-    dir_img = 270;
-    if(checkCollision(tilemap)){
-        x += 5;
+    if(alive){
+        if(x - 5 >= 0)x -= 5;
+        lastDir = LEFT;
+        dir_img = 270;
+        if(checkCollision(tilemap)){
+            x += 5;
+            return;
+        }
+    }
+    else{
         return;
     }
 }
 
 void Box::move_right(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
-    if(x + sizea + 5 <= SCREEN_WIDTH)x += 5;
-    lastDir = RIGHT;
-    dir_img = 90;
-    if(checkCollision(tilemap)){
-        x -= 5;
+    if(alive){
+        if(x + sizea + 5 <= SCREEN_WIDTH)x += 5;
+        lastDir = RIGHT;
+        dir_img = 90;
+        if(checkCollision(tilemap)){
+            x -= 5;
+            return;
+        }
+    }
+    else{
         return;
     }
 }
 
 void Box::move_up(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
-    if(y - 5 >= 0)y -= 5;
-    lastDir = UP;
-    dir_img = 0;
-    if(checkCollision(tilemap)){
-        y += 5;
+    if(alive){
+        if(y - 5 >= 0)y -= 5;
+        lastDir = UP;
+        dir_img = 0;
+        if(checkCollision(tilemap)){
+            y += 5;
+            return;
+        }
+    }
+    else{
         return;
     }
 }
 
 void Box::move_down(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
-    if(y + sizea + 5 <= SCREEN_HEIGHT)y += 5;
-    lastDir = DOWN;
-    dir_img = 180;
-    if(checkCollision(tilemap)){
-        y -= 5;
+    if(alive){
+        if(y + sizea + 5 <= SCREEN_HEIGHT)y += 5;
+        lastDir = DOWN;
+        dir_img = 180;
+        if(checkCollision(tilemap)){
+            y -= 5;
+            return;
+        }
+    }
+    else{
         return;
     }
 }
@@ -154,142 +201,160 @@ bool Enemy::inside(int minX, int minY, int maxX, int maxY)
 
 void Enemy::move_enemy(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
-    x = x + dx;
-    y = y + dy;
+    if(alive == true){
+        x = x + dx;
+        y = y + dy;
 
-    if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
-        x -= dx;
-        y -= dy;
+        if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
+            x -= dx;
+            y -= dy;
 
-        Direction direc = (Direction)(rand() % 4);
-        if(direc == LEFT){
-            dx = -speed;
-            dy = 0;
-            lastDir = LEFT;
-            dir_img = 270;
+            Direction direc = (Direction)(rand() % 4);
+            if(direc == LEFT){
+                dx = -speed;
+                dy = 0;
+                lastDir = LEFT;
+                dir_img = 270;
+            }
+            else if(direc == RIGHT){
+                dx = speed;
+                dy = 0;
+                lastDir = RIGHT;
+                dir_img = 90;
+            }
+            else if(direc == UP){
+                dx = 0;
+                dy = -speed;
+                lastDir = UP;
+                dir_img = 0;
+            }
+            else{
+                dx = 0;
+                dy = speed;
+                lastDir = DOWN;
+                dir_img = 180;
+            }
         }
-        else if(direc == RIGHT){
-            dx = speed;
-            dy = 0;
-            lastDir = RIGHT;
-            dir_img = 90;
-        }
-        else if(direc == UP){
-            dx = 0;
-            dy = -speed;
-            lastDir = UP;
-            dir_img = 0;
-        }
-        else{
-            dx = 0;
-            dy = speed;
-            lastDir = DOWN;
-            dir_img = 180;
-        }
+    }
+    else{
+        return;
     }
 }
 
 void Enemy::render_enemy(SDL_Renderer* renderer)
 {
-    SDL_Texture* tanktexture = loadTexture("enemy_tank.png", renderer);
-    renderTexture(tanktexture, x, y, size_enemy, size_enemy, dir_img, flip, renderer);
+    if(alive == true){
+        SDL_Texture* tanktexture = loadTexture("enemy_tank.png", renderer);
+        renderTexture(tanktexture, x, y, size_enemy, size_enemy, dir_img, flip, renderer);
+    }
+    else{
+        return;
+    }
 }
 
 void Enemy::enemy_shoot(vector <Bullet> &bullets_enemy)
 {
-    bullets_enemy.push_back(Bullet(x + size_enemy / 2 - 10 / 2, y + size_enemy / 2 - 10 / 2, lastDir));
+    if(alive == true) bullets_enemy.push_back(Bullet(x + size_enemy / 2 - 10 / 2, y + size_enemy / 2 - 10 / 2, lastDir));
+    else{
+        return;
+    }
 }
 
 void Enemy::move_direc(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
-    Direction direc = (Direction)(rand() % 4);
-    if(direc == LEFT)
-    {
-        int dx_old = dx;
-        int dy_old = dy;
-        dx = -speed;
-        dy = 0;
-        x += dx;
-        y += dy;
-        if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
-            x -= dx;
-            y -= dy;
-            dx = dx_old;
-            dy = dy_old;
-            return;
+    if(alive == true){
+        Direction direc = (Direction)(rand() % 4);
+        if(direc == LEFT)
+        {
+            int dx_old = dx;
+            int dy_old = dy;
+            dx = -speed;
+            dy = 0;
+            x += dx;
+            y += dy;
+            if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
+                x -= dx;
+                y -= dy;
+                dx = dx_old;
+                dy = dy_old;
+                return;
+            }
+            else{
+                x -= dx;
+                y -= dy;
+            }
+            lastDir = LEFT;
+            dir_img = 270;
         }
-        else{
-            x -= dx;
-            y -= dy;
+        else if(direc == RIGHT)
+        {
+            int dx_old = dx;
+            int dy_old = dy;
+            dx = speed;
+            dy = 0;
+            x += dx;
+            y += dy;
+            if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
+                x -= dx;
+                y -= dy;
+                dx = dx_old;
+                dy = dy_old;
+                return;
+            }
+            else{
+                x -= dx;
+                y -= dy;
+            }
+            lastDir = RIGHT;
+            dir_img = 90;
         }
-        lastDir = LEFT;
-        dir_img = 270;
+        else if(direc == UP)
+        {
+            int dx_old = dx;
+            int dy_old = dy;
+            dx = 0;
+            dy = -speed;
+            x += dx;
+            y += dy;
+            if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
+                x -= dx;
+                y -= dy;
+                dx = dx_old;
+                dy = dy_old;
+                return;
+            }
+            else{
+                x -= dx;
+                y -= dy;
+            }
+            lastDir = UP;
+            dir_img = 0;
+        }
+        else
+        {
+            int dx_old = dx;
+            int dy_old = dy;
+            dx = 0;
+            dy = speed;
+            x += dx;
+            y += dy;
+            if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
+                x -= dx;
+                y -= dy;
+                dx = dx_old;
+                dy = dy_old;
+                return;
+            }
+            else{
+                x -= dx;
+                y -= dy;
+            }
+            lastDir = DOWN;
+            dir_img = 180;
+        }
     }
-    else if(direc == RIGHT)
-    {
-        int dx_old = dx;
-        int dy_old = dy;
-        dx = speed;
-        dy = 0;
-        x += dx;
-        y += dy;
-        if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
-            x -= dx;
-            y -= dy;
-            dx = dx_old;
-            dy = dy_old;
-            return;
-        }
-        else{
-            x -= dx;
-            y -= dy;
-        }
-        lastDir = RIGHT;
-        dir_img = 90;
-    }
-    else if(direc == UP)
-    {
-        int dx_old = dx;
-        int dy_old = dy;
-        dx = 0;
-        dy = -speed;
-        x += dx;
-        y += dy;
-        if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
-            x -= dx;
-            y -= dy;
-            dx = dx_old;
-            dy = dy_old;
-            return;
-        }
-        else{
-            x -= dx;
-            y -= dy;
-        }
-        lastDir = UP;
-        dir_img = 0;
-    }
-    else
-    {
-        int dx_old = dx;
-        int dy_old = dy;
-        dx = 0;
-        dy = speed;
-        x += dx;
-        y += dy;
-        if(Collision_Enemy_Wall(tilemap) || !inside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)){
-            x -= dx;
-            y -= dy;
-            dx = dx_old;
-            dy = dy_old;
-            return;
-        }
-        else{
-            x -= dx;
-            y -= dy;
-        }
-        lastDir = DOWN;
-        dir_img = 180;
+    else{
+        return;
     }
 }
 
