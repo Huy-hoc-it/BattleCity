@@ -85,11 +85,10 @@ bool Bullet::collision_bullet_tank_main(Box& box)
     return false;
 }
 
-void Box::render(SDL_Renderer* renderer)
+void Box::render(SDL_Renderer* renderer, SDL_Texture* texture)
 {
     if(alive){
-        SDL_Texture* tanktexture = loadTexture("tank_main.png", renderer);
-        renderTexture(tanktexture, x, y, sizea, sizea, dir_img, flip, renderer);
+        renderTexture(texture, x, y, sizea, sizea, dir_img, flip, renderer);
     }
     else{
         return;
@@ -185,7 +184,7 @@ bool Enemy::Collision_Enemy_Wall(Tilemap& tilemap){
     int tileY_upon = y / tilemap.tileSize;
     int tileX_bottom = (x + size_enemy - 1) / tilemap.tileSize;
     int tileY_bottom = (y + size_enemy - 1) / tilemap.tileSize;
-    cout << tileX_upon << " " << tileY_upon << " " << tileX_bottom << " " << tileY_bottom << endl;
+    //cout << tileX_upon << " " << tileY_upon << " " << tileX_bottom << " " << tileY_bottom << endl;
     if (tileX_upon < 0 || tileY_upon < 0 || tileX_bottom >= tilemap.tiles.size() || tileY_bottom >= tilemap.tiles.size()) return false;
     if(tilemap.tiles[tileX_upon][tileY_upon] > 0 || tilemap.tiles[tileX_bottom][tileY_bottom] > 0 ||
        tilemap.tiles[tileX_upon][tileY_bottom] > 0 || tilemap.tiles[tileX_bottom][tileY_upon] > 0){
@@ -241,20 +240,45 @@ void Enemy::move_enemy(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREE
     }
 }
 
-void Enemy::render_enemy(SDL_Renderer* renderer)
+void Enemy::render_enemy(SDL_Renderer* renderer, SDL_Texture* texture)
 {
     if(alive == true){
-        SDL_Texture* tanktexture = loadTexture("enemy_tank.png", renderer);
-        renderTexture(tanktexture, x, y, size_enemy, size_enemy, dir_img, flip, renderer);
+        renderTexture(texture, x, y, size_enemy, size_enemy, dir_img, flip, renderer);
     }
     else{
         return;
     }
 }
 
-void Enemy::enemy_shoot(vector <Bullet> &bullets_enemy)
+void Enemy::enemy_shoot()
 {
     if(alive == true) bullets_enemy.push_back(Bullet(x + size_enemy / 2 - 10 / 2, y + size_enemy / 2 - 10 / 2, lastDir));
+    else{
+        return;
+    }
+}
+
+void Enemy::update_bullets(SDL_Renderer* renderer, Box& box, Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+{
+    if(alive){
+        for (size_t i = 0; i < bullets_enemy.size(); ) // size_t: kieu du lieu unsigned, khong am
+        {
+            bullets_enemy[i].move();
+            if (!bullets_enemy[i].isInside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) || bullets_enemy[i].collision_bullet_wall(tilemap.tiles, tilemap.tileSize))
+            {
+                bullets_enemy.erase(bullets_enemy.begin() + i); // Xóa viên đạn nếu ra ngoài màn hình hoặc chạm vào tường gạch
+            }
+            else
+            {
+                if(bullets_enemy[i].collision_bullet_tank_main(box)){
+                    box.alive = false;
+                    bullets_enemy.erase(bullets_enemy.begin() + i);
+                }
+                bullets_enemy[i].render(renderer);
+                ++i;
+            }
+        }
+    }
     else{
         return;
     }
@@ -358,3 +382,27 @@ void Enemy::move_direc(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREE
     }
 }
 
+void getRandomPosition(Tilemap& tilemap, int& x, int& y, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+{
+    while(true){
+        x = rand() % (SCREEN_WIDTH / tilemap.tileSize);
+        y = rand() % (SCREEN_HEIGHT / tilemap.tileSize);
+
+        if(tilemap.tiles[x][y] == 0 && x >= 5 && y >= 5){
+            break;
+        }
+    }
+    x *=tilemap.tileSize;
+    y *=tilemap.tileSize;
+}
+
+void spawnEnemies(vector <Enemy>& enemies, int enemyCount, Tilemap tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+{
+    enemies.clear();
+
+    for(int i = 0; i < enemyCount; i++){
+        int x, y;
+        getRandomPosition(tilemap, x, y, SCREEN_WIDTH, SCREEN_HEIGHT);
+        enemies.push_back(Enemy(x, y));
+    }
+}

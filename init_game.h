@@ -46,7 +46,7 @@ struct Box{
     SDL_Renderer* renderer;
     bool alive = true;
 
-    void render(SDL_Renderer* renderer);
+    void render(SDL_Renderer* renderer, SDL_Texture* texture);
 
     void move_left(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
     void move_right(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
@@ -66,6 +66,7 @@ struct Enemy{
     Tilemap tilemap;
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     Direction lastDir = LEFT;
+    vector <Bullet> bullets_enemy;
     bool alive = true;
 
     Enemy(int startX, int startY) {
@@ -77,12 +78,16 @@ struct Enemy{
     }
 
     void move_enemy(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
-    void render_enemy(SDL_Renderer* renderer);
-    void enemy_shoot(vector <Bullet> &bullets_enemy);
+    void render_enemy(SDL_Renderer* renderer, SDL_Texture* texture);
+    void enemy_shoot();
+    void update_bullets(SDL_Renderer* renderer,Box& box, Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
     void move_direc(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 
     bool Collision_Enemy_Wall(Tilemap& tilemap);
     bool inside(int minX, int minY, int maxX, int maxY);
 };
+
+void getRandomPosition(Tilemap& tilemap, int& x, int& y, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
+void spawnEnemies(vector <Enemy>& enemies, int enemyCount, Tilemap tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 
 #endif // INITGAME_H

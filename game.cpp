@@ -4,23 +4,25 @@
 #include <vector>
 #include "init_game.h"
 #include "drawmap.h"
-
+#include <algorithm>
 using namespace std;
 
-void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+void game(SDL_Renderer* renderer, vector <SDL_Texture*>& texture, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount)
 {
+    srand(time(nullptr));
     SDL_Event e;
     Box box;
     box.x = 0;
     box.y = 0;
 
     vector <Bullet> bullets_main;
-    vector <Bullet> bullets_enemy;
     Tilemap tilemap;
     tilemap.loadFromFile("map_1.txt");
     bool running = true;
 
-    Enemy enemy(SCREEN_WIDTH - 30, 0);
+    vector <Enemy> enemies;
+
+    spawnEnemies(enemies, enemyCount, tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     int shoot_timer = 0;
     int enemy_direc_timer = 0;
@@ -69,47 +71,41 @@ void game(SDL_Renderer* renderer, SDL_Texture* texture, const int SCREEN_WIDTH, 
             }
             else
             {
-                if(bullets_main[i].collision_bullet_tank_enemy(enemy)){
-                    enemy.alive = false;
-                    bullets_main.erase(bullets_main.begin() + i);
+                for(int j = 0; j < enemyCount; j++){
+                    if(bullets_main[i].collision_bullet_tank_enemy(enemies[j])){
+                        enemies[j].alive = false;
+                        bullets_main.erase(bullets_main.begin() + i);
+                    }
                 }
                 bullets_main[i].render(renderer);
                 ++i;
             }
         }
-
-        enemy.move_enemy(tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
-
+        for(int i = 0; i < enemyCount; i++){
+            enemies[i].move_enemy(tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
+        }
         if(shoot_timer > 60){
-            enemy.enemy_shoot(bullets_enemy);
+            for(int i = 0; i < enemyCount; i++){
+                enemies[i].enemy_shoot();
+            }
             shoot_timer = 0;
         }
         if(enemy_direc_timer > 180){
-            enemy.move_direc(tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
+            for(int i = 0; i < enemyCount; i++){
+                enemies[i].move_direc(tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
+            }
             enemy_direc_timer = 0;
         }
-
-        for (size_t i = 0; i < bullets_enemy.size(); ) // size_t: kieu du lieu unsigned, khong am
-        {
-            bullets_enemy[i].move();
-            if (!bullets_enemy[i].isInside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) || bullets_enemy[i].collision_bullet_wall(tilemap.tiles, tilemap.tileSize))
-            {
-                bullets_enemy.erase(bullets_enemy.begin() + i); // Xóa viên đạn nếu ra ngoài màn hình hoặc chạm vào tường gạch
-            }
-            else
-            {
-                if(bullets_enemy[i].collision_bullet_tank_main(box)){
-                    box.alive = false;
-                    bullets_enemy.erase(bullets_enemy.begin() + i);
-                }
-                bullets_enemy[i].render(renderer);
-                ++i;
-            }
+        for(int i = 0; i < enemyCount; i++){
+            enemies[i].update_bullets(renderer, box, tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
         }
+
         tilemap.loadTileTextures(renderer);
         tilemap.render_map(renderer);
-        box.render(renderer);
-        enemy.render_enemy(renderer);
+        box.render(renderer, texture[0]);
+        for(int i = 0; i < enemyCount; i++){
+            enemies[i].render_enemy(renderer, texture[1]);
+        }
         SDL_RenderPresent(renderer);
         SDL_Delay(16);
     }

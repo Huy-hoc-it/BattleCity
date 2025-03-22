@@ -48,11 +48,13 @@ void logErrorAndExit(const char* msg, const char* error)
     SDL_Quit();
 }
 
-void quitSDL(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* texture)
+void quitSDL(SDL_Window* window, SDL_Renderer* renderer, vector <SDL_Texture*> &texture)
 {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    SDL_DestroyTexture(texture);
+    for(int i = 0; i < int(texture.size()); i++){
+        SDL_DestroyTexture(texture[i]);
+    }
     //SDL_FreeSurface(surface);
     SDL_Quit();
 }
