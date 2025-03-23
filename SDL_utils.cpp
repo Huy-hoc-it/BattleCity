@@ -14,6 +14,10 @@ void initSDL(SDL_Window* &window, SDL_Renderer* &renderer, const int SCREEN_WIDT
 
     if (renderer == nullptr) logErrorAndExit("CreateRenderer", SDL_GetError());
 
+    if (TTF_Init() == -1) {
+        logErrorAndExit("TTF_Init", TTF_GetError());
+    }
+
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 }

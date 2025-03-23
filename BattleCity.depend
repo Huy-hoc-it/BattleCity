@@ -1,19 +1,21 @@
 # depslib dependency file v1.0
-1742660103 source:d:\battlecity\sdl_utils.cpp
+1742748276 source:d:\battlecity\sdl_utils.cpp
 	"SDL_utils.h"
 
-1742660121 d:\battlecity\sdl_utils.h
+1742748207 d:\battlecity\sdl_utils.h
 	<SDL.h>
 	<SDL_image.h>
 	<vector>
+	<SDL_ttf.h>
 
-1742660551 source:d:\battlecity\main.cpp
+1742748079 source:d:\battlecity\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
 	"SDL_utils.h"
 	"game.h"
 	<vector>
+	<SDL_ttf.h>
 
 1742660341 source:d:\battlecity\init_game.cpp
 	<SDL.h>
@@ -29,7 +31,7 @@
 	"SDL_utils.h"
 	"drawmap.h"
 
-1742660639 source:d:\battlecity\game.cpp
+1742748374 source:d:\battlecity\game.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -37,8 +39,10 @@
 	"init_game.h"
 	"drawmap.h"
 	<algorithm>
+	"menu.h"
+	<SDL_ttf.h>
 
-1742660523 d:\battlecity\game.h
+1742660639 d:\battlecity\game.h
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -62,4 +66,19 @@
 	<vector>
 	<string>
 	<fstream>
+
+1742746572 source:d:\battlecity\menu.cpp
+	<SDL.h>
+	<SDL_ttf.h>
+	<SDL_image.h>
+	"SDL_utils.h"
+	<string>
+	"menu.h"
+
+1742746560 d:\battlecity\menu.h
+	<SDL.h>
+	<SDL_ttf.h>
+	<SDL_image.h>
+	"SDL_utils.h"
+	<string>
 

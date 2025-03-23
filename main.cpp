@@ -4,6 +4,7 @@
 #include "SDL_utils.h"
 #include "game.h"
 #include <vector>
+#include <SDL_ttf.h>
 using namespace std;
 
 const int SCREEN_WIDTH = 600;
@@ -17,6 +18,7 @@ int main(int argc, char* argv[])
     SDL_Renderer* renderer;
 
     initSDL(window, renderer, SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
+
 
     vector <SDL_Texture*> texture;
     SDL_Texture* tank_main = loadTexture("tank_main.png", renderer);
