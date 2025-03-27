@@ -174,6 +174,33 @@ void Box::move_down(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_H
     }
 }
 
+void Box::main_shoot(SDL_Renderer* renderer,vector<Enemy>& enemies, Tilemap& tilemap, int enemyCount, int& enemy_alive, bool& victory, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+{
+    if(alive){
+        for (size_t i = 0; i < bullets_main.size(); ) // size_t: kieu du lieu unsigned, khong am
+        {
+            bullets_main[i].move();
+            if (!bullets_main[i].isInside(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) || bullets_main[i].collision_bullet_wall(tilemap.tiles, tilemap.tileSize))
+            {
+                bullets_main.erase(bullets_main.begin() + i); // Xóa viên đạn nếu ra ngoài màn hình hoặc chạm vào tường gạch
+            }
+            else
+            {
+                for(int j = 0; j < enemyCount; j++){
+                    if(bullets_main[i].collision_bullet_tank_enemy(enemies[j])){
+                        enemies[j].alive = false;
+                        enemy_alive--;
+                        if(enemy_alive == 0) victory = true;
+                        bullets_main.erase(bullets_main.begin() + i);
+                    }
+                }
+                bullets_main[i].render(renderer);
+                ++i;
+            }
+        }
+    }
+}
+
 bool Box::inside(int minX, int minY, int maxX, int maxY)
 {
     return (minX <= x && minY <= y && x + sizea <= maxX && y + sizea <= maxY);

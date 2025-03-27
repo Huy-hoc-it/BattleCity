@@ -13,13 +13,11 @@ struct MenuButton
 {
     SDL_Rect rect;
     string text;
-    SDL_Color color;
     SDL_Texture* texture;
 
-    MenuButton(const string& t, int x, int y, int w, int h, SDL_Color c){
+    MenuButton(const string& t, int x, int y, int w, int h, SDL_Texture* _texture){
         text = t;
-        color = c;
-        texture = nullptr;
+        texture = _texture;
         rect = {x, y, w, h};
     }
     bool isMouseOver(int mouseX, int mouseY);
@@ -28,31 +26,17 @@ struct MenuButton
 struct Menu
 {
     SDL_Renderer* renderer;
-    TTF_Font* font;
-    SDL_Color titleColor;
     SDL_Texture* titleTexture;
     SDL_Rect titleRect;
     vector<MenuButton> buttons;
 
-    Menu(SDL_Renderer* ren, TTF_Font* f){
+    Menu(SDL_Renderer* ren, SDL_Texture* _titleTexture, SDL_Texture* Play_button, SDL_Texture* Exit_button, int x, int y, int w, int h){
         renderer = ren;
-        font = f;
-        titleTexture = nullptr;
-
-
-        titleColor = {255, 255, 0};  // Màu vàng
-        createTitle("Battle City", 100, 50);
-
-        buttons.push_back(MenuButton("Start", 150, 200, 200, 50, {255, 255, 255}));
-        buttons.push_back(MenuButton("Exit", 150, 300, 200, 50, {255, 255, 255}));
-
-        for (auto& button : buttons) {
-            createButtonTexture(button);
-        }
+        titleTexture = _titleTexture;
+        titleRect = {x, y, w, h};
+        buttons.push_back(MenuButton("Play", 250, 380, 100, 50, Play_button));
+        buttons.push_back(MenuButton("Exit", 250, 450, 100, 50, Exit_button));
     }
-
-    void createTitle(const string& text, int x, int y);
-    void createButtonTexture(MenuButton& button);
     void render();
     string handleMouseEvent(int mouseX, int mouseY);
 };

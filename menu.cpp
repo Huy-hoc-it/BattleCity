@@ -12,21 +12,6 @@ bool MenuButton::isMouseOver(int mouseX, int mouseY)
                mouseY >= rect.y && mouseY <= rect.y + rect.h;
 }
 
-void Menu::createTitle(const string& text, int x, int y)
-{
-    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), titleColor);
-    titleTexture = SDL_CreateTextureFromSurface(renderer, surface);
-    titleRect = {x, y, surface->w, surface->h};
-    SDL_FreeSurface(surface);
-}
-
-void Menu::createButtonTexture(MenuButton& button)
-{
-    SDL_Surface* surface = TTF_RenderText_Solid(font, button.text.c_str(), button.color);
-    button.texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-}
-
 void Menu::render()
 {
     SDL_RenderCopy(renderer, titleTexture, nullptr, &titleRect);
