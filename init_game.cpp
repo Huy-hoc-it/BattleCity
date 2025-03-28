@@ -48,7 +48,7 @@ bool Bullet::collision_bullet_wall(vector < vector <int> >& tiles, int tileSize)
     int tileX_bottom = (x + size_b - 1) / tileSize;
     int tileY_bottom = (y + size_b - 1) / tileSize;
 
-    if (tileX_upon < 0 || tileY_upon < 0 || tileX_bottom >= tiles.size() || tileY_bottom >= tiles.size()) return false;
+    if (tileX_upon < 0 || tileY_upon < 0 || tileX_bottom >= int(tiles.size()) || tileY_bottom >= int(tiles.size())) return false;
     if(tiles[tileX_upon][tileY_upon] >= 1 || tiles[tileX_bottom][tileY_bottom] >= 1 ||
        tiles[tileX_upon][tileY_bottom] >= 1 || tiles[tileX_bottom][tileY_upon] >= 1){
 
@@ -102,7 +102,7 @@ bool Box::checkCollision(Tilemap& tilemap)
     int tileX_bottom = (x + sizea - 1) / tilemap.tileSize;
     int tileY_bottom = (y + sizea - 1) / tilemap.tileSize;
     //cout << tileX_upon << " " << tileY_upon << " " << tileX_bottom << " " << tileY_bottom << endl;
-    if (tileX_upon < 0 || tileY_upon < 0 || tileX_bottom >= tilemap.tiles.size() || tileY_bottom >= tilemap.tiles.size()) return false;
+    if (tileX_upon < 0 || tileY_upon < 0 || tileX_bottom >= int(tilemap.tiles.size()) || tileY_bottom >= int(tilemap.tiles.size())) return false;
     if(tilemap.tiles[tileX_upon][tileY_upon] > 0 || tilemap.tiles[tileX_bottom][tileY_bottom] > 0 ||
        tilemap.tiles[tileX_upon][tileY_bottom] > 0 || tilemap.tiles[tileX_bottom][tileY_upon] > 0){
         return true; // đụng tường
@@ -212,7 +212,7 @@ bool Enemy::Collision_Enemy_Wall(Tilemap& tilemap){
     int tileX_bottom = (x + size_enemy - 1) / tilemap.tileSize;
     int tileY_bottom = (y + size_enemy - 1) / tilemap.tileSize;
     //cout << tileX_upon << " " << tileY_upon << " " << tileX_bottom << " " << tileY_bottom << endl;
-    if (tileX_upon < 0 || tileY_upon < 0 || tileX_bottom >= tilemap.tiles.size() || tileY_bottom >= tilemap.tiles.size()) return false;
+    if (tileX_upon < 0 || tileY_upon < 0 || tileX_bottom >= int(tilemap.tiles.size()) || tileY_bottom >= int(tilemap.tiles.size())) return false;
     if(tilemap.tiles[tileX_upon][tileY_upon] > 0 || tilemap.tiles[tileX_bottom][tileY_bottom] > 0 ||
        tilemap.tiles[tileX_upon][tileY_bottom] > 0 || tilemap.tiles[tileX_bottom][tileY_upon] > 0){
         return true; // đụng tường

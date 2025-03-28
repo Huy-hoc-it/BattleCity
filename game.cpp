@@ -9,6 +9,26 @@
 #include <SDL_ttf.h>
 using namespace std;
 
+void remake(Box& box, Tilemap& tilemap, vector <Enemy>& enemies, bool& active,int& shoot_timer,
+             int& enemy_direc_timer, bool& victory, bool& defeat, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount)
+{
+    active = false;
+    box.x = 0;
+    box.y = 0;
+    shoot_timer = 0;
+    enemy_direc_timer = 0;
+    victory = false;
+    defeat = false;
+    box.alive = true;
+    for(int i = 0; i < enemyCount; i++)
+    {
+        enemies[i].alive = true;
+    }
+    tilemap.loadFromFile("map_1.txt");
+    enemies.clear();
+    spawnEnemies(enemies, enemyCount, tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
+}
+
 void game(SDL_Renderer* renderer, vector <SDL_Texture*>& texture, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount)
 {
     srand(time(nullptr));
@@ -29,7 +49,11 @@ void game(SDL_Renderer* renderer, vector <SDL_Texture*>& texture, const int SCRE
     int shoot_timer = 0;
     int enemy_direc_timer = 0;
 
-    Menu menu(renderer, texture[2], texture[5], texture[6], 100, 100, 400, 200);
+    Menu menu(renderer, texture[2], 100, 100, 400, 200);
+    menu.buttons.push_back(MenuButton("Play", 250, 380, 100, 50, texture[5]));
+    menu.buttons.push_back(MenuButton("Exit", 250, 450, 100, 50, texture[6]));
+    MenuButton Try_again = MenuButton("Try_again",200, 380, 100, 50, texture[7]);
+    MenuButton Exit = MenuButton("Exit_end", 350, 380, 100, 50, texture[6]);
 
     int enemy_alive = enemyCount;
     bool victory = false;
@@ -132,16 +156,48 @@ void game(SDL_Renderer* renderer, vector <SDL_Texture*>& texture, const int SCRE
             }
             else if(victory == true){
                 renderTexture(texture[3], 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, SDL_FLIP_NONE, renderer);
+                Try_again.render(renderer);
+                Exit.render(renderer);
                 while(SDL_PollEvent(&e))
                 {
                     if(e.type == SDL_QUIT) running = false;
+                    if (e.type == SDL_MOUSEBUTTONDOWN) {
+                        int mouseX = e.button.x;
+                        int mouseY = e.button.y;
+
+                        if (Try_again.isMouseOver(mouseX, mouseY)) {
+                            cout << "Try again!" << endl;
+                            remake(box, tilemap, enemies, active, shoot_timer, enemy_direc_timer, victory,
+                                   defeat, SCREEN_WIDTH, SCREEN_HEIGHT, enemyCount);
+                        }
+                        else if (Exit.isMouseOver(mouseX, mouseY)) {
+                            cout << "Exit game!" << endl;
+                            running = false;
+                        }
+                    }
                 }
             }
             else if(defeat == true){
                 renderTexture(texture[4], 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, SDL_FLIP_NONE, renderer);
+                Try_again.render(renderer);
+                Exit.render(renderer);
                 while(SDL_PollEvent(&e))
                 {
                     if(e.type == SDL_QUIT) running = false;
+                    if (e.type == SDL_MOUSEBUTTONDOWN) {
+                        int mouseX = e.button.x;
+                        int mouseY = e.button.y;
+
+                        if (Try_again.isMouseOver(mouseX, mouseY)) {
+                            cout << "Try again!" << endl;
+                            remake(box, tilemap, enemies, active, shoot_timer, enemy_direc_timer, victory,
+                                   defeat, SCREEN_WIDTH, SCREEN_HEIGHT, enemyCount);
+                        }
+                        else if (Exit.isMouseOver(mouseX, mouseY)) {
+                            cout << "Exit game!" << endl;
+                            running = false;
+                        }
+                    }
                 }
             }
             SDL_RenderPresent(renderer);

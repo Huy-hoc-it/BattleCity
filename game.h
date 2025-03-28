@@ -10,5 +10,8 @@ using namespace std;
 
 void game(SDL_Renderer* renderer, vector <SDL_Texture*>& texture, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount);
 
+void remake(Box& box, Tilemap& tilemap, vector <Enemy>& enemies, bool& active,int& shoot_timer,
+             int& enemy_direc_timer, bool& victory, bool& defeat, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount);
+
 #endif // GAME_H
 

@@ -21,6 +21,8 @@ struct MenuButton
         rect = {x, y, w, h};
     }
     bool isMouseOver(int mouseX, int mouseY);
+
+    void render(SDL_Renderer* renderer);
 };
 
 struct Menu
@@ -30,12 +32,10 @@ struct Menu
     SDL_Rect titleRect;
     vector<MenuButton> buttons;
 
-    Menu(SDL_Renderer* ren, SDL_Texture* _titleTexture, SDL_Texture* Play_button, SDL_Texture* Exit_button, int x, int y, int w, int h){
+    Menu(SDL_Renderer* ren, SDL_Texture* _titleTexture, int x, int y, int w, int h){
         renderer = ren;
         titleTexture = _titleTexture;
         titleRect = {x, y, w, h};
-        buttons.push_back(MenuButton("Play", 250, 380, 100, 50, Play_button));
-        buttons.push_back(MenuButton("Exit", 250, 450, 100, 50, Exit_button));
     }
     void render();
     string handleMouseEvent(int mouseX, int mouseY);

@@ -42,7 +42,6 @@ struct Box{
     Tilemap tilemap;
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     Direction lastDir = RIGHT;
-    SDL_Texture* texture = nullptr;
     SDL_Renderer* renderer;
     vector <Bullet> bullets_main;
     bool alive = true;

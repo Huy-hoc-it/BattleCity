@@ -8,7 +8,7 @@
 	<vector>
 	<SDL_ttf.h>
 
-1743091364 source:d:\battlecity\main.cpp
+1743178479 source:d:\battlecity\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -16,7 +16,7 @@
 	"game.h"
 	<vector>
 
-1743083604 source:d:\battlecity\init_game.cpp
+1743179221 source:d:\battlecity\init_game.cpp
 	<SDL.h>
 	<SDL_image.h>
 	"init_game.h"
@@ -24,13 +24,13 @@
 	<iostream>
 	<algorithm>
 
-1743083619 d:\battlecity\init_game.h
+1743179152 d:\battlecity\init_game.h
 	<SDL.h>
 	<SDL_image.h>
 	"SDL_utils.h"
 	"drawmap.h"
 
-1743091431 source:d:\battlecity\game.cpp
+1743179067 source:d:\battlecity\game.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -41,7 +41,7 @@
 	"menu.h"
 	<SDL_ttf.h>
 
-1743089908 d:\battlecity\game.h
+1743178994 d:\battlecity\game.h
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -66,7 +66,7 @@
 	<string>
 	<fstream>
 
-1743089670 source:d:\battlecity\menu.cpp
+1743176460 source:d:\battlecity\menu.cpp
 	<SDL.h>
 	<SDL_ttf.h>
 	<SDL_image.h>
@@ -74,7 +74,7 @@
 	<string>
 	"menu.h"
 
-1743090276 d:\battlecity\menu.h
+1743176418 d:\battlecity\menu.h
 	<SDL.h>
 	<SDL_ttf.h>
 	<SDL_image.h>

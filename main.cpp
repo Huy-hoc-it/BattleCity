@@ -27,6 +27,7 @@ int main(int argc, char* argv[])
     SDL_Texture* You_lose = loadTexture("You_lose.png", renderer);
     SDL_Texture* Start_button = loadTexture("Start_button.png", renderer);
     SDL_Texture* Exit_button = loadTexture("Exit_button.png", renderer);
+    SDL_Texture* Try_again = loadTexture("Try_again.png", renderer);
     texture.push_back(tank_main);
     texture.push_back(tank_enemy);
     texture.push_back(Menu_name);
@@ -34,10 +35,11 @@ int main(int argc, char* argv[])
     texture.push_back(You_lose);
     texture.push_back(Start_button);
     texture.push_back(Exit_button);
+    texture.push_back(Try_again);
 
     game(renderer, texture, SCREEN_WIDTH, SCREEN_HEIGHT, enemyCount);
 
-    waitUntilKeyPressed();
+    //waitUntilKeyPressed();
     quitSDL(window, renderer, texture);
     return 0;
 }

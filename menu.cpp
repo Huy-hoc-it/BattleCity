@@ -12,6 +12,11 @@ bool MenuButton::isMouseOver(int mouseX, int mouseY)
                mouseY >= rect.y && mouseY <= rect.y + rect.h;
 }
 
+void MenuButton::render(SDL_Renderer* renderer)
+{
+    SDL_RenderCopy(renderer, texture, nullptr, &rect);
+}
+
 void Menu::render()
 {
     SDL_RenderCopy(renderer, titleTexture, nullptr, &titleRect);
