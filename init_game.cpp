@@ -1,9 +1,4 @@
-#include <SDL.h>
-#include <SDL_image.h>
 #include "init_game.h"
-#include "drawmap.h"
-#include <iostream>
-#include <algorithm>
 
 using namespace std;
 const int BULLET_SPEED = 8;
@@ -174,7 +169,9 @@ void Box::move_down(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_H
     }
 }
 
-void Box::main_shoot(SDL_Renderer* renderer,vector<Enemy>& enemies, Tilemap& tilemap, int enemyCount, int& enemy_alive, bool& victory, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+void Box::main_shoot(SDL_Renderer* renderer,vector<Enemy>& enemies, Tilemap& tilemap, ExplosionManager& explosionManager,
+                     vector <SDL_Texture*>& explosionTextures, int enemyCount, int& enemy_alive, bool& victory,
+                     const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
     if(alive){
         for (size_t i = 0; i < bullets_main.size(); ) // size_t: kieu du lieu unsigned, khong am
@@ -188,6 +185,7 @@ void Box::main_shoot(SDL_Renderer* renderer,vector<Enemy>& enemies, Tilemap& til
             {
                 for(int j = 0; j < enemyCount; j++){
                     if(bullets_main[i].collision_bullet_tank_enemy(enemies[j])){
+                        explosionManager.addExplosion(enemies[j].x, enemies[j].y, explosionTextures);
                         enemies[j].alive = false;
                         enemy_alive--;
                         if(enemy_alive == 0) victory = true;

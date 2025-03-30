@@ -34,6 +34,8 @@
 		</Compiler>
 		<Unit filename="SDL_utils.cpp" />
 		<Unit filename="SDL_utils.h" />
+		<Unit filename="animation.cpp" />
+		<Unit filename="animation.h" />
 		<Unit filename="drawmap.cpp" />
 		<Unit filename="drawmap.h" />
 		<Unit filename="game.cpp" />

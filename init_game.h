@@ -3,8 +3,11 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
-#include "SDL_utils.h"
 #include "drawmap.h"
+#include <iostream>
+#include <algorithm>
+#include "animation.h"
+
 using namespace std;
 
 enum Direction { LEFT, RIGHT, UP, DOWN };
@@ -52,7 +55,9 @@ struct Box{
     void move_right(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
     void move_up(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
     void move_down(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
-    void main_shoot(SDL_Renderer* renderer,vector<Enemy>& enemies, Tilemap& tilemap, int enemyCount, int& enemy_alive, bool& victory, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
+    void main_shoot(SDL_Renderer* renderer,vector<Enemy>& enemies, Tilemap& tilemap, ExplosionManager& explosionManager,
+                    vector <SDL_Texture*>& explosionTextures, int enemyCount, int& enemy_alive, bool& victory,
+                    const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 
     bool checkCollision(Tilemap& tilemap);
     bool inside(int minX, int minY, int maxX, int maxY);

@@ -37,9 +37,17 @@ int main(int argc, char* argv[])
     texture.push_back(Exit_button);
     texture.push_back(Try_again);
 
-    game(renderer, texture, SCREEN_WIDTH, SCREEN_HEIGHT, enemyCount);
+    vector <SDL_Texture*> explosionTextures;
+    SDL_Texture* explosion1 = loadTexture("explosion1.png", renderer);
+    SDL_Texture* explosion2 = loadTexture("explosion2.png", renderer);
+    SDL_Texture* explosion3 = loadTexture("explosion3.png", renderer);
+    explosionTextures.push_back(explosion1);
+    explosionTextures.push_back(explosion2);
+    explosionTextures.push_back(explosion3);
+
+    game(renderer, texture, explosionTextures, SCREEN_WIDTH, SCREEN_HEIGHT, enemyCount);
 
     //waitUntilKeyPressed();
-    quitSDL(window, renderer, texture);
+    quitSDL(window, renderer, texture, explosionTextures);
     return 0;
 }

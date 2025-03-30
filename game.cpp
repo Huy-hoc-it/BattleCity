@@ -1,12 +1,5 @@
-#include <iostream>
-#include <SDL.h>
-#include <SDL_image.h>
-#include <vector>
-#include "init_game.h"
-#include "drawmap.h"
-#include <algorithm>
-#include "menu.h"
-#include <SDL_ttf.h>
+#include "game.h"
+
 using namespace std;
 
 void remake(Box& box, Tilemap& tilemap, vector <Enemy>& enemies, bool& active,int& shoot_timer,
@@ -29,7 +22,8 @@ void remake(Box& box, Tilemap& tilemap, vector <Enemy>& enemies, bool& active,in
     spawnEnemies(enemies, enemyCount, tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void game(SDL_Renderer* renderer, vector <SDL_Texture*>& texture, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount)
+void game(SDL_Renderer* renderer, vector <SDL_Texture*>& texture, vector <SDL_Texture*>& explosionTextures,
+          const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount)
 {
     srand(time(nullptr));
     SDL_Event e;
@@ -54,6 +48,8 @@ void game(SDL_Renderer* renderer, vector <SDL_Texture*>& texture, const int SCRE
     menu.buttons.push_back(MenuButton("Exit", 250, 450, 100, 50, texture[6]));
     MenuButton Try_again = MenuButton("Try_again",200, 380, 100, 50, texture[7]);
     MenuButton Exit = MenuButton("Exit_end", 350, 380, 100, 50, texture[6]);
+
+    ExplosionManager explosionManager;
 
     int enemy_alive = enemyCount;
     bool victory = false;
@@ -126,7 +122,7 @@ void game(SDL_Renderer* renderer, vector <SDL_Texture*>& texture, const int SCRE
                     }
                 }
 
-                box.main_shoot(renderer, enemies, tilemap, enemyCount, enemy_alive, victory, SCREEN_WIDTH, SCREEN_HEIGHT);
+                box.main_shoot(renderer, enemies, tilemap, explosionManager, explosionTextures, enemyCount, enemy_alive, victory, SCREEN_WIDTH, SCREEN_HEIGHT);
 
                 for(int i = 0; i < enemyCount; i++){
                     enemies[i].move_enemy(tilemap, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -153,6 +149,9 @@ void game(SDL_Renderer* renderer, vector <SDL_Texture*>& texture, const int SCRE
                 for(int i = 0; i < enemyCount; i++){
                     enemies[i].render_enemy(renderer, texture[1]);
                 }
+
+                explosionManager.updateExplosions();
+                explosionManager.renderExplosions(renderer);
             }
             else if(victory == true){
                 renderTexture(texture[3], 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, SDL_FLIP_NONE, renderer);
@@ -203,5 +202,9 @@ void game(SDL_Renderer* renderer, vector <SDL_Texture*>& texture, const int SCRE
             SDL_RenderPresent(renderer);
             SDL_Delay(16);
         }
+    }
+    for(int i = 1; i <= tilemap.numTile; i++)
+    {
+        SDL_DestroyTexture(tilemap.tileTextures[i]);
     }
 }

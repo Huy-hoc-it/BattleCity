@@ -15,7 +15,7 @@ SDL_Texture *loadTexture(const char *filename, SDL_Renderer* renderer);
 
 void logErrorAndExit(const char* msg, const char* error);
 
-void quitSDL(SDL_Window* window, SDL_Renderer* renderer, vector <SDL_Texture*> &texture);
+void quitSDL(SDL_Window* window, SDL_Renderer* renderer, vector <SDL_Texture*> &texture, vector <SDL_Texture*>& explosionTextures);
 
 void waitUntilKeyPressed();
 

@@ -1,8 +1,3 @@
-#include <SDL.h>
-#include <SDL_ttf.h>
-#include <SDL_image.h>
-#include "SDL_utils.h"
-#include <string>
 #include "menu.h"
 using namespace std;
 
