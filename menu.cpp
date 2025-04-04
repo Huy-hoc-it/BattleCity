@@ -1,13 +1,13 @@
 #include "menu.h"
 using namespace std;
 
-bool MenuButton::isMouseOver(int mouseX, int mouseY)
+bool Button::isMouseOver(int mouseX, int mouseY)
 {
     return mouseX >= rect.x && mouseX <= rect.x + rect.w &&
                mouseY >= rect.y && mouseY <= rect.y + rect.h;
 }
 
-void MenuButton::render(SDL_Renderer* renderer)
+void Button::render(SDL_Renderer* renderer)
 {
     SDL_RenderCopy(renderer, texture, nullptr, &rect);
 }

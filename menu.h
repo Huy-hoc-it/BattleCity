@@ -8,13 +8,13 @@
 
 using namespace std;
 
-struct MenuButton
+struct Button
 {
     SDL_Rect rect;
     string text;
     SDL_Texture* texture;
 
-    MenuButton(const string& t, int x, int y, int w, int h, SDL_Texture* _texture){
+    Button(const string& t, int x, int y, int w, int h, SDL_Texture* _texture){
         text = t;
         texture = _texture;
         rect = {x, y, w, h};
@@ -29,7 +29,7 @@ struct Menu
     SDL_Renderer* renderer;
     SDL_Texture* titleTexture;
     SDL_Rect titleRect;
-    vector<MenuButton> buttons;
+    vector<Button> buttons;
 
     Menu(SDL_Renderer* ren, SDL_Texture* _titleTexture, int x, int y, int w, int h){
         renderer = ren;

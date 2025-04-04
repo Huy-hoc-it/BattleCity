@@ -1,12 +1,13 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include "SDL_utils.h"
 #include "game.h"
 #include <vector>
 using namespace std;
 
-const int SCREEN_WIDTH = 600;
+const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const char* WINDOW_TITLE = "Battle city";
 const int enemyCount = 3;
@@ -18,6 +19,7 @@ int main(int argc, char* argv[])
 
     initSDL(window, renderer, SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
 
+    TTF_Font* font = loadFont("times.ttf", 28);
 
     vector <SDL_Texture*> texture;
     SDL_Texture* tank_main = loadTexture("tank_main.png", renderer);
@@ -28,6 +30,7 @@ int main(int argc, char* argv[])
     SDL_Texture* Start_button = loadTexture("Start_button.png", renderer);
     SDL_Texture* Exit_button = loadTexture("Exit_button.png", renderer);
     SDL_Texture* Try_again = loadTexture("Try_again.png", renderer);
+    SDL_Texture* Pause_button = loadTexture("Pause_button.png", renderer);
     texture.push_back(tank_main);
     texture.push_back(tank_enemy);
     texture.push_back(Menu_name);
@@ -36,6 +39,7 @@ int main(int argc, char* argv[])
     texture.push_back(Start_button);
     texture.push_back(Exit_button);
     texture.push_back(Try_again);
+    texture.push_back(Pause_button);
 
     vector <SDL_Texture*> explosionTextures;
     SDL_Texture* explosion1 = loadTexture("explosion1.png", renderer);
@@ -45,9 +49,9 @@ int main(int argc, char* argv[])
     explosionTextures.push_back(explosion2);
     explosionTextures.push_back(explosion3);
 
-    game(renderer, texture, explosionTextures, SCREEN_WIDTH, SCREEN_HEIGHT, enemyCount);
+    game(renderer, font, texture, explosionTextures, SCREEN_WIDTH, SCREEN_HEIGHT, enemyCount);
 
     //waitUntilKeyPressed();
-    quitSDL(window, renderer, texture, explosionTextures);
+    quitSDL(window, renderer, texture, explosionTextures, font);
     return 0;
 }

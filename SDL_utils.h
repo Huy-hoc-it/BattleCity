@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <vector>
 #include <SDL_ttf.h>
 using namespace std;
@@ -13,9 +14,12 @@ void renderTexture(SDL_Texture *texture, int x, int y, int witch, int height, do
 
 SDL_Texture *loadTexture(const char *filename, SDL_Renderer* renderer);
 
+TTF_Font* loadFont(const char* filename, int fontSize);
+
 void logErrorAndExit(const char* msg, const char* error);
 
-void quitSDL(SDL_Window* window, SDL_Renderer* renderer, vector <SDL_Texture*> &texture, vector <SDL_Texture*>& explosionTextures);
+void quitSDL(SDL_Window* window, SDL_Renderer* renderer, vector <SDL_Texture*> &texture,
+             vector <SDL_Texture*>& explosionTextures, TTF_Font* font);
 
 void waitUntilKeyPressed();
 

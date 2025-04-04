@@ -5,7 +5,9 @@ using namespace std;
 void initSDL(SDL_Window* &window, SDL_Renderer* &renderer, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const char* WINDOW_TITLE){
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
         logErrorAndExit("SDL_Init", SDL_GetError());
-
+    if (TTF_Init() == -1) {
+        logErrorAndExit("TTF_Init", TTF_GetError());
+    }
     window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
     if (window == nullptr) logErrorAndExit("CreateWindow", SDL_GetError());
@@ -46,13 +48,25 @@ SDL_Texture *loadTexture(const char *filename, SDL_Renderer* renderer)
 	return texture;
 }
 
+TTF_Font* loadFont(const char* filename, int fontSize) {
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading font %s", filename);
+
+    TTF_Font* font = TTF_OpenFont(filename, fontSize);
+    if (font == NULL) {
+        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Failed to load font %s: %s", filename, TTF_GetError());
+    }
+
+    return font;
+}
+
 void logErrorAndExit(const char* msg, const char* error)
 {
     SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "%s: %s", msg, error);
     SDL_Quit();
 }
 
-void quitSDL(SDL_Window* window, SDL_Renderer* renderer, vector <SDL_Texture*> &texture, vector <SDL_Texture*>& explosionTextures)
+void quitSDL(SDL_Window* window, SDL_Renderer* renderer, vector <SDL_Texture*> &texture,
+             vector <SDL_Texture*>& explosionTextures, TTF_Font* font)
 {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
@@ -62,8 +76,10 @@ void quitSDL(SDL_Window* window, SDL_Renderer* renderer, vector <SDL_Texture*> &
     for(int i = 0; i < int(explosionTextures.size()); i++){
         SDL_DestroyTexture(explosionTextures[i]);
     }
-    //SDL_FreeSurface(surface);
+    TTF_CloseFont(font);
+
     SDL_Quit();
+    TTF_Quit();
 }
 
 void waitUntilKeyPressed()
