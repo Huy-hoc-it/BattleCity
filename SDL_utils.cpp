@@ -65,17 +65,19 @@ void logErrorAndExit(const char* msg, const char* error)
     SDL_Quit();
 }
 
-void quitSDL(SDL_Window* window, SDL_Renderer* renderer, vector <SDL_Texture*> &texture,
+void quitSDL(SDL_Window* window, SDL_Renderer* renderer, map<string, SDL_Texture*>& texture,
              vector <SDL_Texture*>& explosionTextures, TTF_Font* font)
 {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    for(int i = 0; i < int(texture.size()); i++){
-        SDL_DestroyTexture(texture[i]);
+    for (auto& pair : texture) {
+        SDL_DestroyTexture(pair.second);
     }
+    texture.clear();
     for(int i = 0; i < int(explosionTextures.size()); i++){
         SDL_DestroyTexture(explosionTextures[i]);
     }
+    explosionTextures.clear();
     TTF_CloseFont(font);
 
     SDL_Quit();

@@ -1,7 +1,6 @@
 #include "init_game.h"
 
 using namespace std;
-const int BULLET_SPEED = 8;
 
 enum Direction;
 
@@ -10,16 +9,16 @@ void Bullet::move()
     switch (dir)
     {
     case LEFT:
-        x -= BULLET_SPEED;
+        x -= Bullet_speed;
         break;
     case RIGHT:
-        x += BULLET_SPEED;
+        x += Bullet_speed;
         break;
     case UP:
-        y -= BULLET_SPEED;
+        y -= Bullet_speed;
         break;
     case DOWN:
-        y += BULLET_SPEED;
+        y += Bullet_speed;
         break;
     }
 }
@@ -108,11 +107,11 @@ bool Box::checkCollision(Tilemap& tilemap)
 void Box::move_left(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
     if(alive){
-        if(x - 5 >= 0)x -= 5;
+        if(x - speed >= 0)x -= speed;
         lastDir = LEFT;
         dir_img = 270;
         if(checkCollision(tilemap)){
-            x += 5;
+            x += speed;
             return;
         }
     }
@@ -124,11 +123,11 @@ void Box::move_left(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_H
 void Box::move_right(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
     if(alive){
-        if(x + sizea + 5 <= SCREEN_WIDTH)x += 5;
+        if(x + sizea + speed <= SCREEN_WIDTH)x += speed;
         lastDir = RIGHT;
         dir_img = 90;
         if(checkCollision(tilemap)){
-            x -= 5;
+            x -= speed;
             return;
         }
     }
@@ -140,11 +139,11 @@ void Box::move_right(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_
 void Box::move_up(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
     if(alive){
-        if(y - 5 >= 0)y -= 5;
+        if(y - speed >= 0)y -= speed;
         lastDir = UP;
         dir_img = 0;
         if(checkCollision(tilemap)){
-            y += 5;
+            y += speed;
             return;
         }
     }
@@ -156,11 +155,11 @@ void Box::move_up(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEI
 void Box::move_down(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
     if(alive){
-        if(y + sizea + 5 <= SCREEN_HEIGHT)y += 5;
+        if(y + sizea + speed <= SCREEN_HEIGHT)y += speed;
         lastDir = DOWN;
         dir_img = 180;
         if(checkCollision(tilemap)){
-            y -= 5;
+            y -= speed;
             return;
         }
     }
@@ -188,7 +187,6 @@ void Box::main_shoot(SDL_Renderer* renderer,vector<Enemy>& enemies, Tilemap& til
                         explosionManager.addExplosion(enemies[j].x, enemies[j].y, explosionTextures);
                         enemies[j].alive = false;
                         enemy_alive--;
-                        if(enemy_alive == 0) victory = true;
                         bullets_main.erase(bullets_main.begin() + i);
                         score += 100;
                     }
@@ -276,15 +274,16 @@ void Enemy::render_enemy(SDL_Renderer* renderer, SDL_Texture* texture)
     }
 }
 
-void Enemy::enemy_shoot()
+void Enemy::enemy_shoot(const int BULLET_SPEED)
 {
-    if(alive == true) bullets_enemy.push_back(Bullet(x + size_enemy / 2 - 10 / 2, y + size_enemy / 2 - 10 / 2, lastDir));
+    if(alive == true) bullets_enemy.push_back(Bullet(x + size_enemy / 2 - 10 / 2, y + size_enemy / 2 - 10 / 2, BULLET_SPEED, lastDir));
     else{
         return;
     }
 }
 
-void Enemy::update_bullets(SDL_Renderer* renderer, Box& box, Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+void Enemy::update_bullets(SDL_Renderer* renderer, Box& box, Tilemap& tilemap, ExplosionManager& explosionManager,
+                     vector <SDL_Texture*>& explosionTextures, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
     if(alive){
         for (size_t i = 0; i < bullets_enemy.size(); ) // size_t: kieu du lieu unsigned, khong am
@@ -297,6 +296,7 @@ void Enemy::update_bullets(SDL_Renderer* renderer, Box& box, Tilemap& tilemap, c
             else
             {
                 if(bullets_enemy[i].collision_bullet_tank_main(box)){
+                    explosionManager.addExplosion(box.x, box.y, explosionTextures);
                     box.alive = false;
                     bullets_enemy.erase(bullets_enemy.begin() + i);
                 }
@@ -422,13 +422,13 @@ void getRandomPosition(Tilemap& tilemap, int& x, int& y, const int SCREEN_WIDTH,
     y *=tilemap.tileSize;
 }
 
-void spawnEnemies(vector <Enemy>& enemies, int enemyCount, Tilemap tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+void spawnEnemies(vector <Enemy>& enemies, int enemyCount, Tilemap tilemap, const int Tank_speed, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
     enemies.clear();
 
     for(int i = 0; i < enemyCount; i++){
         int x, y;
         getRandomPosition(tilemap, x, y, SCREEN_WIDTH, SCREEN_HEIGHT);
-        enemies.push_back(Enemy(x, y));
+        enemies.push_back(Enemy(x, y, Tank_speed));
     }
 }

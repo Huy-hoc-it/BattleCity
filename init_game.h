@@ -20,9 +20,11 @@ struct Bullet{
     int size_b = 10;
     Direction dir;
     SDL_Renderer* renderer;
-    Bullet (int startX, int startY, Direction direction){
+    int Bullet_speed;
+    Bullet (int startX, int startY, int Bullet_speed_, Direction direction){
         x = startX;
         y = startY;
+        Bullet_speed = Bullet_speed_;
         dir = direction;
     }
     void move();
@@ -43,11 +45,18 @@ struct Box{
     int sizea = 30;
     double dir_img = 90;
     Tilemap tilemap;
+    int speed;
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     Direction lastDir = RIGHT;
     SDL_Renderer* renderer;
     vector <Bullet> bullets_main;
     bool alive = true;
+
+    Box(int startX, int startY, int speed_){
+        x = startX;
+        y = startY;
+        speed = speed_;
+    }
 
     void render(SDL_Renderer* renderer, SDL_Texture* texture);
 
@@ -75,18 +84,19 @@ struct Enemy{
     vector <Bullet> bullets_enemy;
     bool alive = true;
 
-    Enemy(int startX, int startY) {
+    Enemy(int startX, int startY, int speed_) {
         x = startX;
         y = startY;
-        speed = 2;
+        speed = speed_;
         dx = -speed;
         dy = 0;
     }
 
     void move_enemy(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
     void render_enemy(SDL_Renderer* renderer, SDL_Texture* texture);
-    void enemy_shoot();
-    void update_bullets(SDL_Renderer* renderer,Box& box, Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
+    void enemy_shoot(const int BULLET_SPEED);
+    void update_bullets(SDL_Renderer* renderer,Box& box, Tilemap& tilemap, ExplosionManager& explosionManager,
+                     vector <SDL_Texture*>& explosionTextures, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
     void move_direc(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 
     bool Collision_Enemy_Wall(Tilemap& tilemap);
@@ -94,6 +104,6 @@ struct Enemy{
 };
 
 void getRandomPosition(Tilemap& tilemap, int& x, int& y, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
-void spawnEnemies(vector <Enemy>& enemies, int enemyCount, Tilemap tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
+void spawnEnemies(vector <Enemy>& enemies, int enemyCount, Tilemap tilemap, const int Tank_speed, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 
 #endif // INITGAME_H

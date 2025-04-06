@@ -5,6 +5,8 @@
 #include "SDL_utils.h"
 #include "game.h"
 #include <vector>
+#include <map>
+#include <string>
 using namespace std;
 
 const int SCREEN_WIDTH = 800;
@@ -21,30 +23,22 @@ int main(int argc, char* argv[])
 
     TTF_Font* font = loadFont("times.ttf", 28);
 
-    vector <SDL_Texture*> texture;
-    SDL_Texture* tank_main = loadTexture("tank_main.png", renderer);
-    SDL_Texture* tank_enemy = loadTexture("enemy_tank.png", renderer);
-    SDL_Texture* Menu_name = loadTexture("Menu_name.png", renderer);
-    SDL_Texture* You_win = loadTexture("You_win.png", renderer);
-    SDL_Texture* You_lose = loadTexture("You_lose.png", renderer);
-    SDL_Texture* Start_button = loadTexture("Start_button.png", renderer);
-    SDL_Texture* Exit_button = loadTexture("Exit_button.png", renderer);
-    SDL_Texture* Try_again = loadTexture("Try_again.png", renderer);
-    SDL_Texture* Pause_button = loadTexture("Pause_button.png", renderer);
-    texture.push_back(tank_main);
-    texture.push_back(tank_enemy);
-    texture.push_back(Menu_name);
-    texture.push_back(You_win);
-    texture.push_back(You_lose);
-    texture.push_back(Start_button);
-    texture.push_back(Exit_button);
-    texture.push_back(Try_again);
-    texture.push_back(Pause_button);
+    map<string, SDL_Texture*> texture;
+    texture["tank_main"] = loadTexture("image/tank_main.png", renderer);
+    texture["tank_enemy"] = loadTexture("image/enemy_tank.png", renderer);
+    texture["Menu_name"] = loadTexture("image/Menu_name.png", renderer);
+    texture["You_win"] = loadTexture("image/You_win.png", renderer);
+    texture["You_lose"] = loadTexture("image/You_lose.png", renderer);
+    texture["Start_button"] = loadTexture("image/Start_button.png", renderer);
+    texture["Exit_button"] = loadTexture("image/Exit_button.png", renderer);
+    texture["Try_again"] = loadTexture("image/Try_again.png", renderer);
+    texture["Pause_button"] = loadTexture("image/Pause_button.png", renderer);
+    texture["Play_button"] = loadTexture("image/Play_button.png", renderer);
 
     vector <SDL_Texture*> explosionTextures;
-    SDL_Texture* explosion1 = loadTexture("explosion1.png", renderer);
-    SDL_Texture* explosion2 = loadTexture("explosion2.png", renderer);
-    SDL_Texture* explosion3 = loadTexture("explosion3.png", renderer);
+    SDL_Texture* explosion1 = loadTexture("image/explosion1.png", renderer);
+    SDL_Texture* explosion2 = loadTexture("image/explosion2.png", renderer);
+    SDL_Texture* explosion3 = loadTexture("image/explosion3.png", renderer);
     explosionTextures.push_back(explosion1);
     explosionTextures.push_back(explosion2);
     explosionTextures.push_back(explosion3);

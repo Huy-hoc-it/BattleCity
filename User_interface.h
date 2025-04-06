@@ -17,7 +17,7 @@ struct UI
     UI(SDL_Renderer* ren, TTF_Font* font_, SDL_Texture* pauseTexture);
 
     void renderText(const string& text, int x, int y, int w, int h);
-    void render(int& score);
+    void render(int& score, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 };
 
 #endif // UI_H

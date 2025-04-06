@@ -6,7 +6,7 @@ using namespace std;
 void Tilemap::loadTileTextures(SDL_Renderer* renderer)
 {
     for(int i = 1; i <= numTile; i++){
-        string fileName = to_string(i) + ".png";
+        string fileName = "image/" + to_string(i) + ".png";
         tileTextures[i] = loadTexture(fileName.c_str(), renderer);
     }
 }

@@ -6,6 +6,9 @@
 #include <SDL_ttf.h>
 #include <vector>
 #include <SDL_ttf.h>
+#include <map>
+#include <string>
+
 using namespace std;
 
 void initSDL(SDL_Window* &window, SDL_Renderer* &renderer, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const char* WINDOW_TITLE);
@@ -18,7 +21,7 @@ TTF_Font* loadFont(const char* filename, int fontSize);
 
 void logErrorAndExit(const char* msg, const char* error);
 
-void quitSDL(SDL_Window* window, SDL_Renderer* renderer, vector <SDL_Texture*> &texture,
+void quitSDL(SDL_Window* window, SDL_Renderer* renderer, map<string, SDL_Texture*>& texture,
              vector <SDL_Texture*>& explosionTextures, TTF_Font* font);
 
 void waitUntilKeyPressed();

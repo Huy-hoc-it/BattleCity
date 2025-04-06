@@ -18,9 +18,9 @@ void UI::renderText(const string& text, int x, int y, int w, int h)
     SDL_DestroyTexture(textTexture);
 }
 
-void UI::render(int& score)
+void UI::render(int& score, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
-    SDL_Rect sidebar = {600, 0, 200, 600};
+    SDL_Rect sidebar = {SCREEN_HEIGHT, 0, SCREEN_WIDTH - SCREEN_HEIGHT, SCREEN_HEIGHT};
     SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
     SDL_RenderFillRect(renderer, &sidebar);
 

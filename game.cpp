@@ -2,18 +2,23 @@
 
 using namespace std;
 
+const int Tank_speed = 3;
+const int BULLET_SPEED = 8;
+
 void remake(Box& box, Tilemap& tilemap, vector <Enemy>& enemies, ExplosionManager& explosionManager,
-            int& enemy_alive, bool& active,int& shoot_timer, int& enemy_direc_timer, bool& victory,
-            bool& defeat, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount)
+            int& enemy_alive, bool& active, int& shoot_timer, int& enemy_direc_timer, int& score, bool& victory,
+            bool& defeat, bool& isPause, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount)
 {
     active = false;
     box.x = 0;
     box.y = 0;
     shoot_timer = 0;
     enemy_direc_timer = 0;
+    score = 0;
     victory = false;
     defeat = false;
     box.alive = true;
+    isPause = false;
     enemy_alive = enemyCount;
     for(int i = 0; i < enemyCount; i++)
     {
@@ -24,17 +29,15 @@ void remake(Box& box, Tilemap& tilemap, vector <Enemy>& enemies, ExplosionManage
     explosionManager.explosions.clear();
     tilemap.loadFromFile("map_1.txt");
     enemies.clear();
-    spawnEnemies(enemies, enemyCount, tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
+    spawnEnemies(enemies, enemyCount, tilemap, Tank_speed, SCREEN_HEIGHT, SCREEN_HEIGHT);
 }
 
-void game(SDL_Renderer* renderer, TTF_Font* font, vector <SDL_Texture*>& texture, vector <SDL_Texture*>& explosionTextures,
+void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& texture, vector <SDL_Texture*>& explosionTextures,
           const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount)
 {
     srand(time(nullptr));
     SDL_Event e;
-    Box box;
-    box.x = 0;
-    box.y = 0;
+    Box box(0, 0, Tank_speed);
 
     Tilemap tilemap;
     tilemap.loadFromFile("map_1.txt");
@@ -43,17 +46,19 @@ void game(SDL_Renderer* renderer, TTF_Font* font, vector <SDL_Texture*>& texture
 
     vector <Enemy> enemies;
 
-    spawnEnemies(enemies, enemyCount, tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
+    spawnEnemies(enemies, enemyCount, tilemap, Tank_speed, SCREEN_HEIGHT, SCREEN_HEIGHT);
 
     int shoot_timer = 0;
     int enemy_direc_timer = 0;
+    int delay_timer = 0;
 
-    Menu menu(renderer, texture[2], 200, 100, 400, 200);
-    menu.buttons.push_back(Button("Play", 350, 380, 100, 50, texture[5]));
-    menu.buttons.push_back(Button("Exit", 350, 450, 100, 50, texture[6]));
-    Button Try_again = Button("Try_again",200, 380, 100, 50, texture[7]);
-    Button Exit = Button("Exit_end", 500, 380, 100, 50, texture[6]);
-    UI U_Inter(renderer, font, texture[8]);
+    Menu menu(renderer, texture["Menu_name"], 200, 100, 400, 200);
+    menu.buttons.push_back(Button("Start", 350, 380, 100, 50, texture["Start_button"]));
+    menu.buttons.push_back(Button("Exit", 350, 450, 100, 50, texture["Exit_button"]));
+    Button Try_again = Button("Try_again",200, 380, 100, 50, texture["Try_again"]);
+    Button Exit = Button("Exit_end", 500, 380, 100, 50, texture["Exit_button"]);
+    Button Play("Play", 200, 380, 100, 50, texture["Play_button"]);
+    UI U_Inter(renderer, font, texture["Pause_button"]);
 
     ExplosionManager explosionManager;
 
@@ -81,7 +86,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, vector <SDL_Texture*>& texture
                     int mouseY = e.button.y;
 
                     string buttonClicked = menu.handleMouseEvent(mouseX, mouseY);
-                    if (buttonClicked == "Play") {
+                    if (buttonClicked == "Start") {
                         cout << "Start game!" << endl;
                         active = true;
                     } else if (buttonClicked == "Exit") {
@@ -97,7 +102,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, vector <SDL_Texture*>& texture
         else{
             if(victory == false && defeat == false){
                 if(isPause == false){
-                    U_Inter.render(score);
+                    U_Inter.render(score, SCREEN_WIDTH, SCREEN_HEIGHT);
                     shoot_timer++;
                     enemy_direc_timer++;
 
@@ -111,20 +116,10 @@ void game(SDL_Renderer* renderer, TTF_Font* font, vector <SDL_Texture*>& texture
                             case SDLK_ESCAPE:
                                 running = false;
                                 break;
-                            case SDLK_LEFT:
-                                box.move_left(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
-                                break;
-                            case SDLK_RIGHT:
-                                box.move_right(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
-                                break;
-                            case SDLK_UP:
-                                box.move_up(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
-                                break;
-                            case SDLK_DOWN:
-                                box.move_down(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
-                                break;
                             case SDLK_SPACE:
-                                if(box.alive)box.bullets_main.push_back(Bullet(box.x + box.sizea / 2 - 10 / 2, box.y + box.sizea / 2 - 10 / 2, box.lastDir));
+                                if(box.alive)box.bullets_main.push_back(Bullet(box.x + box.sizea / 2 - 10 / 2,
+                                                                               box.y + box.sizea / 2 - 10 / 2,
+                                                                               BULLET_SPEED, box.lastDir));
                             default:
                                 break;
                             }
@@ -139,16 +134,41 @@ void game(SDL_Renderer* renderer, TTF_Font* font, vector <SDL_Texture*>& texture
                             }
                         }
                     }
+                    if (!isPause) {
+                        const Uint8* keyState = SDL_GetKeyboardState(NULL);
+
+                        if (keyState[SDL_SCANCODE_LEFT]){
+                            box.move_left(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
+                        }
+                        if (keyState[SDL_SCANCODE_RIGHT]){
+                            box.move_right(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
+                        }
+                        if (keyState[SDL_SCANCODE_UP]){
+                            box.move_up(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
+                        }
+                        if (keyState[SDL_SCANCODE_DOWN]){
+                            box.move_down(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
+                        }
+                    }
 
                     box.main_shoot(renderer, enemies, tilemap, explosionManager, explosionTextures,
                                    enemyCount, enemy_alive, victory, score, SCREEN_HEIGHT, SCREEN_HEIGHT);
+                    if(enemy_alive == 0){
+                        if(delay_timer < 60){
+                            delay_timer++;
+                        }
+                        else{
+                            delay_timer = 0;
+                            victory = true;
+                        }
+                    }
 
                     for(int i = 0; i < enemyCount; i++){
                         enemies[i].move_enemy(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
                     }
                     if(shoot_timer > 60){
                         for(int i = 0; i < enemyCount; i++){
-                            enemies[i].enemy_shoot();
+                            enemies[i].enemy_shoot(BULLET_SPEED);
                         }
                         shoot_timer = 0;
                     }
@@ -159,21 +179,29 @@ void game(SDL_Renderer* renderer, TTF_Font* font, vector <SDL_Texture*>& texture
                         enemy_direc_timer = 0;
                     }
                     for(int i = 0; i < enemyCount; i++){
-                        enemies[i].update_bullets(renderer, box, tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
+                        enemies[i].update_bullets(renderer, box, tilemap, explosionManager, explosionTextures, SCREEN_HEIGHT, SCREEN_HEIGHT);
                     }
-                    if(box.alive == false)defeat = true;
+                    if(box.alive == false){
+                        if(delay_timer < 60){
+                            delay_timer++;
+                        }
+                        else{
+                            defeat = true;
+                            delay_timer = 0;
+                        }
+                    }
 
                     tilemap.render_map(renderer);
-                    box.render(renderer, texture[0]);
+                    box.render(renderer, texture["tank_main"]);
                     for(int i = 0; i < enemyCount; i++){
-                        enemies[i].render_enemy(renderer, texture[1]);
+                        enemies[i].render_enemy(renderer, texture["tank_enemy"]);
                     }
 
                     explosionManager.updateExplosions();
                     explosionManager.renderExplosions(renderer);
                 }
                 else{
-                    Try_again.render(renderer);
+                    Play.render(renderer);
                     Exit.render(renderer);
                     while(SDL_PollEvent(&e))
                     {
@@ -182,7 +210,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, vector <SDL_Texture*>& texture
                             int mouseX = e.button.x;
                             int mouseY = e.button.y;
 
-                            if (Try_again.isMouseOver(mouseX, mouseY)) {
+                            if (Play.isMouseOver(mouseX, mouseY)) {
                                 cout << "Try again!" << endl;
                                 isPause = false;
                             }
@@ -195,7 +223,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, vector <SDL_Texture*>& texture
                 }
             }
             else if(victory == true){
-                renderTexture(texture[3], 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, SDL_FLIP_NONE, renderer);
+                renderTexture(texture["You_win"], 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, SDL_FLIP_NONE, renderer);
                 Try_again.render(renderer);
                 Exit.render(renderer);
                 while(SDL_PollEvent(&e))
@@ -208,9 +236,8 @@ void game(SDL_Renderer* renderer, TTF_Font* font, vector <SDL_Texture*>& texture
                         if (Try_again.isMouseOver(mouseX, mouseY)) {
                             cout << "Try again!" << endl;
                             remake(box, tilemap, enemies, explosionManager, enemy_alive, active,
-                                   shoot_timer, enemy_direc_timer, victory,
-                                   defeat, SCREEN_HEIGHT, SCREEN_HEIGHT, enemyCount);
-                            isPause = false;
+                                   shoot_timer, enemy_direc_timer, score, victory,
+                                   defeat, isPause, SCREEN_HEIGHT, SCREEN_HEIGHT, enemyCount);
                         }
                         else if (Exit.isMouseOver(mouseX, mouseY)) {
                             cout << "Exit game!" << endl;
@@ -220,7 +247,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, vector <SDL_Texture*>& texture
                 }
             }
             else if(defeat == true){
-                renderTexture(texture[4], 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, SDL_FLIP_NONE, renderer);
+                renderTexture(texture["You_lose"], 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, SDL_FLIP_NONE, renderer);
                 Try_again.render(renderer);
                 Exit.render(renderer);
                 while(SDL_PollEvent(&e))
@@ -233,9 +260,8 @@ void game(SDL_Renderer* renderer, TTF_Font* font, vector <SDL_Texture*>& texture
                         if (Try_again.isMouseOver(mouseX, mouseY)) {
                             cout << "Try again!" << endl;
                             remake(box, tilemap, enemies, explosionManager, enemy_alive, active,
-                                   shoot_timer, enemy_direc_timer, victory,
-                                   defeat, SCREEN_HEIGHT, SCREEN_HEIGHT, enemyCount);
-                            isPause = false;
+                                   shoot_timer, enemy_direc_timer, score, victory,
+                                   defeat, isPause, SCREEN_HEIGHT, SCREEN_HEIGHT, enemyCount);
                         }
                         else if (Exit.isMouseOver(mouseX, mouseY)) {
                             cout << "Exit game!" << endl;
