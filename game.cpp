@@ -27,7 +27,7 @@ void remake(Box& box, Tilemap& tilemap, vector <Enemy>& enemies, ExplosionManage
     }
     box.bullets_main.clear();
     explosionManager.explosions.clear();
-    tilemap.loadFromFile("map_1.txt");
+    tilemap.loadFromFile("map/map_2.txt");
     enemies.clear();
     spawnEnemies(enemies, enemyCount, tilemap, Tank_speed, SCREEN_HEIGHT, SCREEN_HEIGHT);
 }
@@ -40,7 +40,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
     Box box(0, 0, Tank_speed);
 
     Tilemap tilemap;
-    tilemap.loadFromFile("map_1.txt");
+    tilemap.loadFromFile("map/map_2.txt");
     tilemap.loadTileTextures(renderer);
     bool running = true;
 
@@ -137,16 +137,16 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
                     if (!isPause) {
                         const Uint8* keyState = SDL_GetKeyboardState(NULL);
 
-                        if (keyState[SDL_SCANCODE_LEFT]){
+                        if (keyState[SDL_SCANCODE_LEFT] || keyState[SDL_SCANCODE_A]){
                             box.move_left(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
                         }
-                        if (keyState[SDL_SCANCODE_RIGHT]){
+                        if (keyState[SDL_SCANCODE_RIGHT] || keyState[SDL_SCANCODE_D]){
                             box.move_right(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
                         }
-                        if (keyState[SDL_SCANCODE_UP]){
+                        if (keyState[SDL_SCANCODE_UP] || keyState[SDL_SCANCODE_W]){
                             box.move_up(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
                         }
-                        if (keyState[SDL_SCANCODE_DOWN]){
+                        if (keyState[SDL_SCANCODE_DOWN] || keyState[SDL_SCANCODE_S]){
                             box.move_down(tilemap, SCREEN_HEIGHT, SCREEN_HEIGHT);
                         }
                     }
@@ -191,12 +191,11 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
                         }
                     }
 
-                    tilemap.render_map(renderer);
                     box.render(renderer, texture["tank_main"]);
                     for(int i = 0; i < enemyCount; i++){
                         enemies[i].render_enemy(renderer, texture["tank_enemy"]);
                     }
-
+                    tilemap.render_map(renderer);
                     explosionManager.updateExplosions();
                     explosionManager.renderExplosions(renderer);
                 }
@@ -278,4 +277,5 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
     {
         SDL_DestroyTexture(tilemap.tileTextures[i]);
     }
+    tilemap.tileTextures.clear();
 }

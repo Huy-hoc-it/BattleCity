@@ -11,7 +11,7 @@
 	<map>
 	<string>
 
-1743950926 source:d:\battlecity\main.cpp
+1743953416 source:d:\battlecity\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -22,7 +22,7 @@
 	<map>
 	<string>
 
-1743952225 source:d:\battlecity\init_game.cpp
+1744042243 source:d:\battlecity\init_game.cpp
 	"init_game.h"
 
 1743952745 d:\battlecity\init_game.h
@@ -33,7 +33,7 @@
 	<algorithm>
 	"animation.h"
 
-1743953155 source:d:\battlecity\game.cpp
+1744042252 source:d:\battlecity\game.cpp
 	"game.h"
 
 1743950438 d:\battlecity\game.h
@@ -48,7 +48,7 @@
 	"animation.h"
 	"User_interface.h"
 
-1742138606 d:\battlecity\drawmap.h
+1744042288 d:\battlecity\drawmap.h
 	<SDL.h>
 	<SDL_image.h>
 	"SDL_utils.h"
@@ -57,7 +57,7 @@
 	<fstream>
 	<map>
 
-1743347512 source:d:\battlecity\drawmap.cpp
+1743953416 source:d:\battlecity\drawmap.cpp
 	<iostream>
 	"drawmap.h"
 

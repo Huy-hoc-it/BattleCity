@@ -16,7 +16,7 @@ struct Tilemap{
     int width_map = 0;
     int height_map = 0;
     int tileSize = 30;
-    int numTile = 2;
+    int numTile = 3;
     map<int, SDL_Texture*> tileTextures;
 
     void loadTileTextures(SDL_Renderer* renderer);
