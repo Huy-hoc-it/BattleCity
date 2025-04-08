@@ -33,7 +33,7 @@ void remake(Box& box, Tilemap& tilemap, vector <Enemy>& enemies, ExplosionManage
 }
 
 void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& texture, vector <SDL_Texture*>& explosionTextures,
-          const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount)
+          map<string, Mix_Chunk*>& media, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount)
 {
     srand(time(nullptr));
     SDL_Event e;
@@ -61,6 +61,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
     UI U_Inter(renderer, font, texture["Pause_button"]);
 
     ExplosionManager explosionManager;
+    SoundManager soundManager(media["Start"], media["Exit"], media["Hit"], media["Win"], media["Lose"]);
 
     int enemy_alive = enemyCount;
     bool victory = false;
@@ -71,10 +72,14 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
     bool isPause = false;
     int score = 0;
 
+    int exit_timer = 0;
+    bool exit_clicked = false;
+
     while(running)
     {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+        soundManager.resetSoundStates();
         if(active == false){
             while (SDL_PollEvent(&e)) {
                 if (e.type == SDL_QUIT) {
@@ -88,15 +93,27 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
                     string buttonClicked = menu.handleMouseEvent(mouseX, mouseY);
                     if (buttonClicked == "Start") {
                         cout << "Start game!" << endl;
+                        soundManager.playStartButtonSound();
                         active = true;
                     } else if (buttonClicked == "Exit") {
                         cout << "Exit game!" << endl;
-                        running = false;
+                        soundManager.playExitButtonSound();
+                        exit_clicked = true;
                     }
                 }
             }
-            SDL_RenderClear(renderer);
 
+            if(exit_clicked == true){
+                if(exit_timer < 60){
+                    exit_timer++;
+                }
+                else{
+                    exit_timer = 0;
+                    running = false;
+                }
+            }
+            soundManager.resetSoundStates();
+            SDL_RenderClear(renderer);
             menu.render();
         }
         else{
@@ -131,6 +148,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
                             if (U_Inter.pauseButton.isMouseOver(mouseX, mouseY))
                             {
                                 isPause = true;
+                                soundManager.playExitButtonSound();
                             }
                         }
                     }
@@ -151,7 +169,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
                         }
                     }
 
-                    box.main_shoot(renderer, enemies, tilemap, explosionManager, explosionTextures,
+                    box.main_shoot(renderer, enemies, tilemap, explosionManager, explosionTextures, soundManager,
                                    enemyCount, enemy_alive, victory, score, SCREEN_HEIGHT, SCREEN_HEIGHT);
                     if(enemy_alive == 0){
                         if(delay_timer < 60){
@@ -160,6 +178,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
                         else{
                             delay_timer = 0;
                             victory = true;
+                            soundManager.playWinSound();
                         }
                     }
 
@@ -187,6 +206,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
                         }
                         else{
                             defeat = true;
+                            soundManager.playLoseSound();
                             delay_timer = 0;
                         }
                     }
@@ -211,12 +231,23 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
 
                             if (Play.isMouseOver(mouseX, mouseY)) {
                                 cout << "Try again!" << endl;
+                                soundManager.playExitButtonSound();
                                 isPause = false;
                             }
                             else if (Exit.isMouseOver(mouseX, mouseY)) {
                                 cout << "Exit game!" << endl;
-                                running = false;
+                                soundManager.playExitButtonSound();
+                                exit_clicked = true;
                             }
+                        }
+                    }
+                    if(exit_clicked == true){
+                        if(exit_timer < 60){
+                            exit_timer++;
+                        }
+                        else{
+                            exit_timer = 0;
+                            running = false;
                         }
                     }
                 }
@@ -225,6 +256,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
                 renderTexture(texture["You_win"], 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, SDL_FLIP_NONE, renderer);
                 Try_again.render(renderer);
                 Exit.render(renderer);
+
                 while(SDL_PollEvent(&e))
                 {
                     if(e.type == SDL_QUIT) running = false;
@@ -237,11 +269,22 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
                             remake(box, tilemap, enemies, explosionManager, enemy_alive, active,
                                    shoot_timer, enemy_direc_timer, score, victory,
                                    defeat, isPause, SCREEN_HEIGHT, SCREEN_HEIGHT, enemyCount);
+                            soundManager.playExitButtonSound();
                         }
                         else if (Exit.isMouseOver(mouseX, mouseY)) {
                             cout << "Exit game!" << endl;
-                            running = false;
+                            soundManager.playExitButtonSound();
+                            exit_clicked = true;
                         }
+                    }
+                }
+                if(exit_clicked == true){
+                    if(exit_timer < 60){
+                        exit_timer++;
+                    }
+                    else{
+                        exit_timer = 0;
+                        running = false;
                     }
                 }
             }
@@ -249,6 +292,7 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
                 renderTexture(texture["You_lose"], 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, SDL_FLIP_NONE, renderer);
                 Try_again.render(renderer);
                 Exit.render(renderer);
+
                 while(SDL_PollEvent(&e))
                 {
                     if(e.type == SDL_QUIT) running = false;
@@ -261,11 +305,22 @@ void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& tex
                             remake(box, tilemap, enemies, explosionManager, enemy_alive, active,
                                    shoot_timer, enemy_direc_timer, score, victory,
                                    defeat, isPause, SCREEN_HEIGHT, SCREEN_HEIGHT, enemyCount);
+                            soundManager.playExitButtonSound();
                         }
                         else if (Exit.isMouseOver(mouseX, mouseY)) {
                             cout << "Exit game!" << endl;
-                            running = false;
+                            soundManager.playExitButtonSound();
+                            exit_clicked = true;
                         }
+                    }
+                }
+                if(exit_clicked == true){
+                    if(exit_timer < 60){
+                        exit_timer++;
+                    }
+                    else{
+                        exit_timer = 0;
+                        running = false;
                     }
                 }
             }

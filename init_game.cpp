@@ -173,8 +173,8 @@ void Box::move_down(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_H
 }
 
 void Box::main_shoot(SDL_Renderer* renderer,vector<Enemy>& enemies, Tilemap& tilemap, ExplosionManager& explosionManager,
-                     vector <SDL_Texture*>& explosionTextures, int enemyCount, int& enemy_alive, bool& victory,
-                     int& score, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+                     vector <SDL_Texture*>& explosionTextures, SoundManager& soundManager, int enemyCount, int& enemy_alive,
+                     bool& victory, int& score, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
     if(alive){
         for (size_t i = 0; i < bullets_main.size(); ) // size_t: kieu du lieu unsigned, khong am
@@ -192,6 +192,7 @@ void Box::main_shoot(SDL_Renderer* renderer,vector<Enemy>& enemies, Tilemap& til
                         enemies[j].alive = false;
                         enemy_alive--;
                         bullets_main.erase(bullets_main.begin() + i);
+                        soundManager.playHitEnemySound();
                         score += 100;
                     }
                 }

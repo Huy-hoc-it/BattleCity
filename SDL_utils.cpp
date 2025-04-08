@@ -8,6 +8,9 @@ void initSDL(SDL_Window* &window, SDL_Renderer* &renderer, const int SCREEN_WIDT
     if (TTF_Init() == -1) {
         logErrorAndExit("TTF_Init", TTF_GetError());
     }
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        logErrorAndExit("Mix_OpenAudio", Mix_GetError());
+    }
     window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
     if (window == nullptr) logErrorAndExit("CreateWindow", SDL_GetError());
@@ -53,10 +56,23 @@ TTF_Font* loadFont(const char* filename, int fontSize) {
 
     TTF_Font* font = TTF_OpenFont(filename, fontSize);
     if (font == NULL) {
-        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Failed to load font %s: %s", filename, TTF_GetError());
+        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR,
+                       "Failed to load font %s: %s", filename, TTF_GetError());
     }
 
     return font;
+}
+
+Mix_Chunk* loadMedia(const char* filename) {
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading media %s", filename);
+
+    Mix_Chunk* media = Mix_LoadWAV(filename);
+    if (media == NULL) {
+        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR,
+                       "Failed to load media %s: %s", filename, Mix_GetError());
+    }
+
+    return media;
 }
 
 void logErrorAndExit(const char* msg, const char* error)
@@ -66,22 +82,31 @@ void logErrorAndExit(const char* msg, const char* error)
 }
 
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer, map<string, SDL_Texture*>& texture,
-             vector <SDL_Texture*>& explosionTextures, TTF_Font* font)
+             vector <SDL_Texture*>& explosionTextures, TTF_Font* font, map<string, Mix_Chunk*>& media)
 {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+
     for (auto& pair : texture) {
         SDL_DestroyTexture(pair.second);
     }
     texture.clear();
+
     for(int i = 0; i < int(explosionTextures.size()); i++){
         SDL_DestroyTexture(explosionTextures[i]);
     }
     explosionTextures.clear();
+
+    for (auto& pair : media) {
+        Mix_FreeChunk(pair.second);
+    }
+    media.clear();
+
     TTF_CloseFont(font);
 
     SDL_Quit();
     TTF_Quit();
+    Mix_CloseAudio();
 }
 
 void waitUntilKeyPressed()

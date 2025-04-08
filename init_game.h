@@ -7,6 +7,7 @@
 #include <iostream>
 #include <algorithm>
 #include "animation.h"
+#include "media.h"
 
 using namespace std;
 
@@ -65,8 +66,8 @@ struct Box{
     void move_up(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
     void move_down(Tilemap& tilemap, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
     void main_shoot(SDL_Renderer* renderer,vector<Enemy>& enemies, Tilemap& tilemap, ExplosionManager& explosionManager,
-                    vector <SDL_Texture*>& explosionTextures, int enemyCount, int& enemy_alive, bool& victory,
-                    int& score, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
+                    vector <SDL_Texture*>& explosionTextures, SoundManager& soundManager, int enemyCount, int& enemy_alive,
+                    bool& victory, int& score, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 
     bool checkCollision(Tilemap& tilemap);
     bool inside(int minX, int minY, int maxX, int maxY);

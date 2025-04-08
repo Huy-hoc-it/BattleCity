@@ -11,11 +11,12 @@
 #include "menu.h"
 #include "animation.h"
 #include "User_interface.h"
+#include "media.h"
 
 using namespace std;
 
 void game(SDL_Renderer* renderer, TTF_Font* font, map<string, SDL_Texture*>& texture, vector <SDL_Texture*>& explosionTextures,
-          const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount);
+          map<string, Mix_Chunk*>& media, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const int enemyCount);
 
 void remake(Box& box, Tilemap& tilemap, vector <Enemy>& enemies, bool& active,int& shoot_timer,
             int& enemy_direc_timer, int& score, bool& victory, bool& defeat, bool& isPause,

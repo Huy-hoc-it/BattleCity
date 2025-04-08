@@ -7,6 +7,8 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <SDL_mixer.h>
+
 using namespace std;
 
 const int SCREEN_WIDTH = 800;
@@ -43,9 +45,16 @@ int main(int argc, char* argv[])
     explosionTextures.push_back(explosion2);
     explosionTextures.push_back(explosion3);
 
-    game(renderer, font, texture, explosionTextures, SCREEN_WIDTH, SCREEN_HEIGHT, enemyCount);
+    map<string, Mix_Chunk*> media;
+    media["Start"] = loadMedia("media/Start_media.wav");
+    media["Exit"] = loadMedia("media/Exit_media.wav");
+    media["Hit"] = loadMedia("media/Get_score.wav");
+    media["Win"] = loadMedia("media/Win.wav");
+    media["Lose"] = loadMedia("media/Lose.wav");
+
+    game(renderer, font, texture, explosionTextures, media, SCREEN_WIDTH, SCREEN_HEIGHT, enemyCount);
 
     //waitUntilKeyPressed();
-    quitSDL(window, renderer, texture, explosionTextures, font);
+    quitSDL(window, renderer, texture, explosionTextures, font, media);
     return 0;
 }

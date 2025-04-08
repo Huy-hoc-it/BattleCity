@@ -8,6 +8,7 @@
 #include <SDL_ttf.h>
 #include <map>
 #include <string>
+#include <SDL_mixer.h>
 
 using namespace std;
 
@@ -19,10 +20,12 @@ SDL_Texture *loadTexture(const char *filename, SDL_Renderer* renderer);
 
 TTF_Font* loadFont(const char* filename, int fontSize);
 
+Mix_Chunk* loadMedia(const char* filename);
+
 void logErrorAndExit(const char* msg, const char* error);
 
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer, map<string, SDL_Texture*>& texture,
-             vector <SDL_Texture*>& explosionTextures, TTF_Font* font);
+             vector <SDL_Texture*>& explosionTextures, TTF_Font* font, map<string, Mix_Chunk*>& media);
 
 void waitUntilKeyPressed();
 
