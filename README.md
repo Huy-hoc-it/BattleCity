@@ -15,7 +15,7 @@ Giải nén, chạy `BattleCity.exe` và chiến thôi! 💣
 
 - **Di chuyển:** Mũi tên ← ↑ ↓ →  
 - **Bắn:** Space  
-- **Mục tiêu:** Bảo vệ căn cứ, tiêu diệt toàn bộ xe tăng địch!
+- **Mục tiêu:** Tiêu diệt toàn bộ xe tăng địch!
 
 ## 📸 Một vài Screenshot
 
